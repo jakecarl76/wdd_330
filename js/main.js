@@ -1,7 +1,7 @@
 var links_list = [
                    {
                      label: "Week1",
-                     url: "w_01/"
+                     url: "w_01/index.html"
                    }
                  ];
                  

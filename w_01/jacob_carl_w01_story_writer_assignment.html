@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>WDD 330 | Jacob Carl | W01 | Story Writer </title>
+  <style>
+    textarea
+    {
+      width: 800px;
+      height: 250px;
+      background-color: lightyellow;
+    }
+  </style>
+  <script>
+    function load_story()
+    {
+      var story_name = document.getElementById("name_input").value;
+      var story_html = localStorage.getItem(story_name);
+      document.getElementById("story_editor").value = story_html;
+    }
+    function save_story()
+    {
+      var story_name = document.getElementById("name_input").value;
+      var story_html = document.getElementById("story_editor").value;
+      localStorage.setItem(story_name, story_html);
+    }
+    function display_story()
+    {
+      var story_html = document.getElementById("story_editor").value;
+      document.getElementById("story_display").innerHTML = story_html;
+    }
+  </script>
+  
+  <!-- localStorage and sessionStorage are great! Would have loved to have known about
+   these when they were added!-->
+</head>
+<body>
+  <h1> Story Editor </h1>
+  
+  <!-- Text should consult the "old white bearded guys", h-tags have had
+  tags h5 and h6 at least since html 4.01 
+  (https://www.w3.org/TR/html401/struct/global.html)-->
+  
+  <label for="name_input"> Story Name: </label>
+  <input id="name_input">
+  
+  <!--Note: text claims that inputs need a closing tag, they do not in html 5. 
+  Older conversions when html was more closely related to xml required at least 
+  putting an ending / (ie <input id=... /> ) 
+  but even this is no longer needed in html5. -->
+  
+  <section>
+    <button onclick="load_story()"> Find and Edit it </buton>
+    <button onclick="save_story()">Save it </button>
+    <button onclick="display_story()">Display it </button>
+  </section>
+  
+  <textarea id="story_editor" 
+   placeholder="Write a totally awesome story here."></textarea>
+  
+  
+  <section id="story_display"></section>
+</body>
+</html>

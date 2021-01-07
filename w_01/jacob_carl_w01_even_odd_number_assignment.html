@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>WDD 330 | Jacob Carl | W01 | Even-Odd Numbers </title>
+  <style>
+    body
+    {
+      background-color: lightgrey;
+    }
+    h1
+    {
+      margin-bottom: 0px;
+    }
+    .tagline
+    {
+      font-size: 0.9em;
+      margin-top: 0.0em;
+    }
+    input
+    {
+      height: 25px;
+      width: 200px;
+      border: none;
+      border-radius: 5px;
+      text-indent: 5px;
+      box-shadow: 0 0 5px #666 inset;
+    }
+  </style>
+  <script>
+  function check_number()
+  {
+    var text_num = document.getElementById("number_input").value;
+    var int_num = parseInt(text_num);
+    
+    //empty case
+    if(text_num == "" || isNaN(int_num))
+    {
+      document.getElementById("result_display").innerHTML ="Please enter a valid number.";
+      return;//End func if err
+    }
+    
+    //do check
+    var remainder = int_num % 2;
+    
+    if(remainder == 0)
+    {
+      document.getElementById("result_display").innerHTML = int_num + " is even.";
+    }
+    else
+    {
+      document.getElementById("result_display").innerHTML = int_num + " is odd.";
+    }
+  }
+  </script>
+  
+</head>
+<body>
+  <h1> Even or Odd </h1>
+  <h2 class="tagline"> How do we sort our numbers?</h2>
+  
+  <label for="number_input"> Enter a Number: </label>
+  <input id="number_input">
+  <button onclick="check_number()"> Check Number </button>
+  
+  <section id="result_display"></section>
+  
+</body>
+</html>
