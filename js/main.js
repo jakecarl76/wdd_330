@@ -1,5 +1,9 @@
 var links_list = [
                    {
+                     label: "QuickCap-noob",
+                     url: "quickcap_noob.html"
+                   },
+                   {
                      label: "Week1",
                      url: "w_01/index.html"
                    }
@@ -16,3 +20,4 @@ function add_list_to_el(el_id)
   
   document.getElementById(el_id).innerHTML = html;
 }
+

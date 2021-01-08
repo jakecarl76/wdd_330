@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>QuickCap-Noob</title>
+</head>
+<script>
+//used tutorial from:
+//https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Taking_still_photos
+  var img_h = 240;
+  var img_w = 500;//320
+  var auto_ratio_setting = "h";
+  
+  var streaming = false;
+  var button_listening = false;
+  
+  var video_el = null;
+  var canvas_el = null;
+  var photo_el = null;
+  var start_btn_el = null;
+  
+  
+  var tmp_file_name = "img_";
+  var tmp_file_iter = 0;
+  var tmp_file_iter_type = "num";
+  var tmp_file_iter_st_char = "a";
+  var tmp_file_ext = ".png";
+  var tmp_file_mime_type = "image/png"
+  var reset_file_it = true;
+  var download_loop_obj = null;
+  var download_loop_i = 0;
+  var download_loop_delay = 200;
+  
+  var data_arr = [];//holds data for downloads
+  var img_arr = []; //holds ref to img_els for deletion process
+  
+  //try to reconnect to camera
+  function reconnect_cam()
+  {
+    //recreate for new event lisener
+    var tmp_el = document.createElement("video");
+    tmp_el.innerHTML = "Video stream not available. Check your camera permissions settings.";
+    tmp_el.setAttribute("id", "video_box");
+    //remove old event listener by replacing el
+    document.getElementById("cam_display").replaceChild(tmp_el, document.getElementById("video_box"));
+    streaming = false;
+    startup();
+  }
+  
+  //request webcam access
+  function startup()
+  {
+    video_el = document.getElementById("video_box");
+    canvas_el = document.getElementById("canv_box");
+    //photo_el = document.getElementById("img_box");//no longer do this, photo el auto generates
+    start_btn_el = document.getElementById("start_btn");
+    
+    //request media streaming
+    navigator.mediaDevices.getUserMedia({video: true, audio: false})
+      .then(function(stream)
+            {
+              video_el.srcObject = stream;
+              video_el.play();
+            })
+      .catch(function(err)
+             {
+               console.log("Camera init. error: " + err);
+             });
+             
+    //add event listener to tell video to configure self when streaming available
+    video_el.addEventListener('canplay', 
+                           function(env)
+                           {  //if statement allows only to be called once
+                             if(!streaming)
+                             {
+                             
+                               //calc width/height depending on settings
+                               if(auto_ratio_setting == "h")
+                               {
+                                 img_h = video_el.videoHeight / (video_el.videoWidth/img_w);
+                               }
+                               else if(auto_ratio_setting == "w")
+                               {
+                                 img_w = video_el.videoWidth / (video_el.videoHeight/img_h);
+                               }
+                               
+                               video_el.setAttribute('width', img_w);
+                               video_el.setAttribute('height', img_h);
+                               canvas_el.setAttribute('width', img_w);
+                               canvas_el.setAttribute('height', img_h);
+                               streaming = true;//prevent from being called again
+                             }//END IF !STREAMING
+                           },
+                           false);
+                           
+    //add event listener for img cap btn (but only once)
+    if(!button_listening)
+    {
+      start_btn_el.addEventListener('click',
+                                    function(env)
+                                    {
+                                      take_pic();
+                                      env.preventDefault();
+                                    },
+                                    false);
+      button_listening = true;
+    }
+    //clear the photo box
+    init_canvas();
+  }//END FUNC START UP
+  
+  //clear photo func
+  function init_canvas()
+  {
+    var context = canvas_el.getContext('2d');
+    context.fillStyle = "#000";
+    context.fillRect(0, 0, canvas_el.width, canvas_el.height);
+    
+    var data = canvas_el.toDataURL(tmp_file_mime_type);
+    //photo_el.setAttribute('src', data);//dont worry about this. creat photo when taking img
+  }
+  
+  //take picture
+  function take_pic()
+  {
+    var context = canvas_el.getContext('2d');
+    
+    //check width/height
+    if(auto_ratio_setting == "h")
+    {
+      img_h = video_el.videoHeight / (video_el.videoWidth/img_w);
+    }
+    else if(auto_ratio_setting == "w")
+    {
+      img_w = video_el.videoWidth / (video_el.videoHeight/img_h);
+    }
+    
+    if (img_w && img_h)
+    {
+      canvas_el.width = img_w;
+      canvas_el.height = img_h;
+      context.drawImage(video_el, 0, 0, img_w, img_h);
+      
+      var data = canvas_el.toDataURL(tmp_file_mime_type);
+      
+      //generate new photo el
+      var tmp_div = document.createElement("div");
+      photo_el = document.createElement("img");
+      var tmp_btn = document.createElement("input");
+      
+      tmp_div.setAttribute("class", "dis_img");
+      img_arr[img_arr.length] = tmp_div;
+      
+      tmp_div.append(photo_el);
+      tmp_div.append(tmp_btn);
+      
+      //set up button
+      tmp_btn.setAttribute("type", "button");
+      tmp_btn.setAttribute("value", "delete");
+      tmp_btn.addEventListener("click", 
+                               function()
+                               {
+                                 //find parent in arr
+                                 var tmp_index = -1;
+                                 var tmp_par = this.parentElement;
+                                 for(var i = 0; i < img_arr.length; i++)
+                                 {
+                                   if(tmp_par == img_arr[i])
+                                   {
+                                     tmp_index = i;
+                                     break;
+                                   }
+                                 }//END FOR searching for parent in arr
+                                 
+                                 //delete parent of img
+                                 document.getElementById("output").removeChild(
+                                   this.parentElement);
+                                 //delete from img arr
+                                 img_arr.splice(tmp_index, 1);
+                                 //delete img data
+                                 data_arr.splice(tmp_index, 1);
+                                 
+                               });//END DELETE BUTTON FUNC
+      //append to output div
+      document.getElementById("output").append(tmp_div);
+      //set up image
+      photo_el.setAttribute('src', data);
+      
+      //add data to arr
+      data_arr[data_arr.length] = data;
+    }
+    else
+    {
+      init_canvas();
+    }
+  }
+  
+  //func downloads all images, is run in an interval to delay between each img so none are skipped by browser
+  function download_imgs()
+  { //https://stackoverflow.com/questions/10673122/how-to-save-canvas-as-an-image-with-canvas-todataurl
+    
+    var tmp_a = document.createElement("a");
+    tmp_a.setAttribute("download", tmp_file_name + get_file_it() + tmp_file_ext);
+    tmp_a.setAttribute("href", data_arr[download_loop_i]);
+    tmp_a.click();
+    console.log("img: " + tmp_file_iter + " " + tmp_a.download);
+      
+    //iterate
+    download_loop_i++;
+    tmp_file_iter++;
+    
+    //end loop condition
+    if(download_loop_i >= data_arr.length)
+    {
+      //end loop by destroying interval
+      clearInterval(download_loop_obj);
+      download_loop_obj = null;
+      //reset file iteration if true
+      if(reset_file_it)
+      {
+        tmp_file_iter = 0;
+      }
+    }
+  }//END FUNC DOWNLOAD IMGS
+  
+  //func calculates and returns the current file iteration character
+  function get_file_it()
+  {
+    if(tmp_file_iter_type == "num")
+    {
+      return tmp_file_iter;
+    }
+    else if(tmp_file_iter_type == "hex")
+    {
+      if(tmp_file_iter == 0)
+      {
+        return 0;
+      }
+      var tmp_iter = "";
+      var tmp_it_num = tmp_file_iter;
+      var tmp_remain = 0;
+      
+      
+      while(tmp_it_num > 0)
+      {
+        tmp_remain = tmp_it_num % 16;
+        
+        //ABCDEF > 9
+        if(tmp_remain > 9)
+        {
+          tmp_iter = String.fromCharCode('A'.charCodeAt(0) + (tmp_remain - 10))
+                   + tmp_iter;
+        }
+        else
+        {
+          //0-9 < ABCDEF, just append
+          tmp_iter = tmp_remain + tmp_iter;
+        }
+        
+        //subtract remainder
+        tmp_it_num -= tmp_remain;
+        //divide by base
+        tmp_it_num /= 16;
+      }//END WHILE PARSING NUMBER
+      
+      return tmp_iter;
+    }
+    else if(tmp_file_iter_type == "alpha_up")
+    {
+      if(tmp_file_iter == 0)
+      {
+        return "A";
+      }
+      var tmp_iter = "";
+      var tmp_it_num = tmp_file_iter;
+      var tmp_remain = 0;
+      
+      
+      while(tmp_it_num > 0)
+      {
+        tmp_remain = tmp_it_num % 26;
+        tmp_remain++;
+        
+        //convert to alpha
+        tmp_iter = String.fromCharCode('A'.charCodeAt(0) + (tmp_remain - 1))
+                 + tmp_iter;
+        
+        //subtract remainder
+        tmp_it_num -= tmp_remain;
+        //divide by base
+        tmp_it_num /= 26;
+      }//END WHILE PARSING NUMBER
+      
+      return tmp_iter;
+    }
+    else if(tmp_file_iter_type == "alpha_low")
+    {
+      
+      if(tmp_file_iter == 0)
+      {
+        return "a";
+      }
+      var tmp_iter = "";
+      var tmp_it_num = tmp_file_iter;
+      var tmp_remain = 0;
+      
+      
+      while(tmp_it_num > 0)
+      {
+        tmp_remain = tmp_it_num % 26;
+        tmp_remain++;
+        
+        //convert to alpha
+        tmp_iter = String.fromCharCode('a'.charCodeAt(0) + (tmp_remain - 1))
+                 + tmp_iter;
+        
+        //subtract remainder
+        tmp_it_num -= tmp_remain;
+        //divide by base
+        tmp_it_num /= 26;
+      }//END WHILE PARSING NUMBER
+      
+      return tmp_iter;
+    }//END IF WHAT TYPE OF ITTER
+  }//END GET FILE ITERATOR
+  
+  //deletes all images
+  function delete_all_imgs()
+  {
+    if(!confirm("Delete all images?"))
+    {
+      return;
+    }
+    
+    //delete all imgs
+    document.getElementById("output").innerHTML = "";
+    //clear out arrays
+    while(img_arr.length > 0)
+    {
+      //remove item from list
+      img_arr.splice(0, 1);
+      //delete data
+      data_arr.splice(0, 1);
+    }
+  }//END FUNC DELETE ALL IMG
+</script>
+<style>
+  header,
+  main,
+  footer
+  {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  main
+  {
+    margin-bottom: 2em;
+  }
+  footer
+  {
+    margin-bottom: 3em;
+    border-top: solid grey 1px;
+  }
+  footer > p
+  {
+    text-align:center;
+  }
+  header > h1
+  {
+    text-align:center;
+  }
+  input
+  {
+    margin-top: 15px;
+  }
+  #cam
+  {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  #output
+  {
+    text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .dis_img
+  {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;
+    padding-bottom: 20px;
+    box-shadow: 5px 5px 5px #AAA;
+    
+  }
+  .options-btn
+  {
+    border: solid black 1px;
+    border-radius: 5px;
+    padding: 5px;
+    cursor: pointer;
+  }
+  .options-btn:hover
+  {
+    border: solid black 1px;
+    border-radius: 5px;
+    padding: 5px;
+    cursor: pointer;
+    background-color: lightgray;
+  }
+  .options-btn:active
+  {
+    border: solid black 1px;
+    border-radius: 5px;
+    padding: 5px;
+    cursor: pointer;
+    background-color: gray;
+  }
+  #more_options
+  {
+    display: grid;
+    grid-template-columns: 10em auto;
+  }
+  #more_options h2,
+  #more_options h3
+  {
+    grid-column: span 2;
+  }
+  #more_options label
+  {
+    text-align: right;
+    vertical-align: baseline;
+  }
+  #more_options input
+  {
+    margin: 5px;
+  }
+</style>
+<body>
+<header>
+  <h1> QuickCap-Noob </h1>
+  <!--test button to test file naming processes-->
+  <!--<input id="test_val" > <input type="button" value="test_it_val" 
+   onclick="tmp_file_iter = document.getElementById('test_val').value; 
+            alert(get_file_it());"> -->
+</header>
+
+<main>
+  <div id="cam">
+    <div id="cam_display">
+      <video id="video_box"> Video stream not available. Check your camera permissions settings.</video>
+    </div>  
+    <div>
+    <span class="options-btn"
+     onclick="
+     if(document.getElementById('more_options').style.display == 'none')
+     {
+       this.innerHTML = 'less options &#9650;';
+       document.getElementById('more_options').style.display = 'grid';
+     }
+     else
+     {
+       this.innerHTML = 'show options &#9660;';
+       document.getElementById('more_options').style.display = 'none';
+     };"> show options &#9660;</span>
+    <input type="button" id="start_btn" value="capture img">
+    <input type="button" value="reconnect cam" onclick="reconnect_cam();">
+    <input type="button" value="download images" 
+    onclick="if(confirm('Download all images?'))
+             {
+               download_loop_obj = setInterval(download_imgs, download_loop_delay);
+               download_loop_i = 0;
+             }">
+    <input type="button" value="delete all images" onclick="delete_all_imgs();">
+    
+    </div>
+    <div id="more_options" style="display:none";>
+      <h2>Auto Generate Dimension</h2>
+      <label for="height">Height:</label>
+      <input type="radio" name="dimens_auto_gen" 
+             onclick="auto_ratio_setting = 'h';
+                     document.getElementById('height_input').disabled = true;
+                     document.getElementById('width_input').disabled = false;" 
+             onchange="document.getElementById('btn_cam_update').disabled = false;"
+             checked>
+      <label for="height">Width:</label>
+      <input type="radio" name="dimens_auto_gen"  
+             onclick="auto_ratio_setting = 'w';
+                     document.getElementById('height_input').disabled = false;
+                     document.getElementById('width_input').disabled = true;" 
+             onchange="document.getElementById('btn_cam_update').disabled = false;">
+      <label for="height">Neither:</label>
+      <input type="radio" name="dimens_auto_gen"  onclick="auto_ratio_setting = 'na';
+                                   document.getElementById('height_input').disabled = false;
+                                   document.getElementById('width_input').disabled = false;" 
+             onchange="document.getElementById('btn_cam_update').disabled = false;">
+      <label for="width_input">Height(px):</label>
+      <input type="number" id="height_input"
+             onchange="img_h = this.value;
+                       document.getElementById('btn_cam_update').disabled = false;"
+             value="240" disabled>
+      <label for="width_input">Width(px):</label>
+      <input type="number" id="width_input" 
+             onchange="img_w = this.value;
+                       document.getElementById('btn_cam_update').disabled = false;"
+             value="500">
+      <input type="button" id="btn_cam_update" value="update camera"
+       onclick="reconnect_cam(); this.disabled = true;" disabled>
+       
+      <h2> Filename Options </h2>
+      <label for="fn_prefix">Filename Prefix:</label>
+      <input type="text" id="fn_prefix" value="img_"
+       onchange="tmp_file_name = this.value">
+       
+      <h3>Filename Iteration Schema:</h3>
+      <label for="dec" title="ie 0-9...">Decimal:</label>
+      <input type="radio" id="dec" name="it_scheme"
+       onclick="tmp_file_iter_type = 'num';" checked>
+      <label for="hex" title="ie 0-F...">Hexadecimal:</label>
+      <input type="radio" id="hex" name="it_scheme"
+       onclick="tmp_file_iter_type = 'hex';" >
+      <label for="alpha_up" title="ie A-Z then AA-AZ...">Uppercase Letters:</label>
+      <input type="radio" id="alpha_up" name="it_scheme"
+       onclick="tmp_file_iter_type = 'alpha_up';" >
+      <label for="alpha_low" title="ie a-z then aa-az...">Lowercase Letters:</label>
+      <input type="radio" id="alpha_low" name="it_scheme"
+       onclick="tmp_file_iter_type = 'alpha_low';" >
+       
+       <h3>File Type:</h3>
+      <label for="png" title="ie 0-9...">PNG:</label>
+      <input type="radio" id="png" name="file_type_radio"
+       onclick="tmp_file_mime_type = 'image/png';tmp_file_ext = '.png';" 
+       checked>
+      <label for="jpg" title="ie 0-9...">JPEG:</label>
+      <input type="radio" id="jpg" name="file_type_radio"
+       onclick="tmp_file_mime_type = 'image/jpeg';tmp_file_ext = '.jpg';">
+       
+      <h2> File Download Options </h2>
+      <label for="file_delay" title="Some browsers may prevent all images from 
+downloading if they are downloaded too quickly 
+in succession. This is the delay between 
+downloads so all items have a chance to 
+download."> File Download Delay: </label>
+      <input type="number" id="file_delay" value="200"
+       onchange="download_loop_delay = this.value">
+    </div>
+  </div>
+
+  <canvas id="canv_box" style="display:none;">
+  </canvas>
+  
+  <div id="output"></div>
+
+  
+</main>
+
+<footer>
+  <p>Use a webcam to easily capture documents and notes.</p>
+</footer>
+  <script>
+    startup();
+  </script>
+</body>
+</html>
