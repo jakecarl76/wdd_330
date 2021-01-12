@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>
+    function show_text()
+    {
+      let user_input = document.getElementById("input1").value;
+      document.getElementById("output").innerHTML = user_input;
+    }
+    
+    let sum_all = function(x){ 
+      let result = 0;
+      let multiplier = 1;
+      if(x < 0)
+      {
+        multiplier = -1;
+      }
+      
+      
+      for(let i = 0; i <= x * multiplier; i++)
+      {
+        result += i * multiplier;
+      }
+      return result;
+    };
+    
+    function add_nums(x)
+    {  
+      if(Number.isInteger(Number(x)))
+      {
+        let number_sum = sum_all(x);
+        document.getElementById("output").innerHTML = number_sum;
+      }
+      else
+      {
+        alert("Please enter a valid number!");
+      }
+    }
+    
+    function add_inputs()
+    {
+      let inputs = return_inputs();
+      
+      document.getElementById("output").innerHTML = inputs[0] + inputs[1];
+    }
+    
+    const multiply = (a, b) => a * b;
+    
+    function multiply_inputs()
+    {
+      let inputs = return_inputs();
+      
+      document.getElementById("output").innerHTML = multiply(inputs[0], inputs[1]);
+    }
+    
+    function return_inputs()
+    {
+      
+      let a = Number(document.getElementById("input1").value);
+      let b = Number(document.getElementById("input2").value);
+      return [a, b];
+    }
+    
+    function subtract(a, b)
+    {
+      return a - b;
+    }
+    
+    function do_math(math_function)
+    {
+      let inputs = return_inputs();
+      let result = math_function(inputs[0], inputs[1]);
+      document.getElementById("output").innerHTML = result;
+    }
+    
+  </script>
+</head>
+<body>
+  <input type="number" id="input1">
+  <input type="number" id="input2">
+  
+  <button onclick="add_nums(document.getElementById('input1').value);">add number</button>
+  
+  <button onclick="add_inputs();"> + </button>
+  
+  <button onclick="do_math(multiply);"> * </button>
+  
+  <button onclick="do_math(subtract);"> - </button>
+  
+  <h2> Output </h2>
+  <div id="output"></div>
+  
+  
+  
+  
+</body>
+</html>
