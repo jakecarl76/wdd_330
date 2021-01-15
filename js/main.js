@@ -8,7 +8,7 @@ var links_list = [
                      url: "w_01/index.html"
                    },
                    {
-                     label: "Wee2",
+                     label: "Week2",
                      url: "w_02/index.html"
                    }
                  ];
