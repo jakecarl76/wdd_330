@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Week 3 Code Experiments 1 - Russian Keyboard</title>
+</head>
+<body>
+  <a href="index.html">&lt;Back</a>
+  <h1>Notes on "this" Keyword </h1>
+  <script id="code">
+  //see console for details/results:
+  
+  console.log("This->window_Obj:");
+  //This defaults to the window obj (in browsers) when:
+  //1)used in global context
+  //2)used in 'simple functions' (even in an obj method)
+  //3)used in anonymous functions
+  //eg:
+  //1)
+  function f1()
+  {
+    console.log(this);
+  }
+  console.log("1) global context");
+  f1();//logs window obj
+  
+  //2) 
+   let obj1 = { f2a: function (){f1();},
+                f2b: function()
+                     {
+                       function f2c()
+                       {
+                       console.log("2b) still global context in the simple func method");
+                       }
+                       f2c();
+                     }
+              };
+  //a) calling a simple function in an obj function
+  obj1.f2a();//this->window obj
+  
+  //b) calling the simple function created in the object method
+  obj1.f2b();//this->window obj
+  
+  //3)
+  console.log("3) simple function in an obj function");
+  
+  //3) calling an anonymous function in an obj
+  let obj2 = { name: "obj2_name_property",
+             f3: function()
+                          {
+                            console.log("obj_Method->'this': " + this);
+                            console.log("obj_Method->'this'.property_name(ref to obj.property): " + this.name);
+                            let tmpf = function (){
+                              console.log("obj_method->anonymous_func->'this': " + this);
+                              console.log("obj_Method->anonymous_func->'this'.property_name(ref to window.property, doesn't exist): " + this.name);
+                            }
+                            tmpf();
+                          }
+             };
+  
+  console.log("3) anonymous function in an obj function");
+  obj2.f3();
+  
+  
+  //using to create an object ->refs to newly created obj
+  function MyObj(val) 
+  {
+    this.val = val;
+  }
+  console.log(new MyObj("constructor_this->the_new_obj"));
+  
+  //this in functions assigned as a value to an obj->refs to the obj
+  let obja = {obj_name: "obja",
+              fa: f1};
+  obja.fa();
+  
+  //bind creates a bound instance of the function, 
+  //ie binds this in the returned function instance to a given param
+  
+  let bf = f1.bind(obja);
+  let objb = {obj_name: "objb",
+              fa: bf};//obj the same as obja, but instead
+                      //of returning self like in obja, will return obja because
+                      //its func's 'this' was bound to obja
+  objb.fa();
+  
+  
+  </script>
+  
+  <pre id="notes"></pre>
+  <script>
+    document.getElementById("notes").innerHTML = document.getElementById("code").innerHTML;
+  </script>
+</body>
+</html>

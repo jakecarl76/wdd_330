@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Week 3 Code Experiments 0</title>
+  <style>
+    input
+    {
+      width: 100%;
+    }
+    textarea
+    {
+      width: 100%;
+      height: 1000px;
+    }
+  </style>
+</head>
+<body>
+  <a href="index.html">&lt;Back</a>
+  
+  <h1> Key Test </h1>
+  <h2 id="t"> Press any key: </h2>
+  <div id="output0"></div>
+  <label for="out0_text">Key Down Output:</lable>
+  <input type="text" id="out0_text">
+  <button onclick="document.getElementById('out0_text').value = '';">Clear</button>
+  <div id="output1"></div>
+  <label for="out1_text">Key Press Output:</lable>
+  <input type="text" id="out1_text">
+  <button onclick="document.getElementById('out1_text').value = '';">Clear</button>
+  <div id="output2"></div>
+  <label for="out2_text">Key Up Output:</lable>
+  <input type="text" id="out2_text">
+  <button onclick="document.getElementById('out2_text').value = '';">Clear</button>
+  
+  
+  <h2> Move mouse over the text area: </h2>
+  
+  <div id="output3"></div>
+  <div id="output4"></div>
+  <div id="output5"></div>
+  <div id="output6"></div>
+  <div id="output7"></div>
+  <div id="output8"></div>
+  <textarea id="mousey"></textarea>
+  
+  <script>
+    document.body.addEventListener('keydown', key_down_func);
+    document.body.addEventListener('keypress', key_press_func);
+    document.body.addEventListener('keyup', key_up_func);
+    
+    document.getElementById("mousey").addEventListener('click', click_func);
+    document.getElementById("mousey").addEventListener('mouseover', mouse_over_func);
+    document.getElementById("mousey").addEventListener('mouseout', mouse_out_func);
+    document.getElementById("mousey").addEventListener('mousemove', mouse_move_func);
+    document.getElementById("mousey").addEventListener('mousedown', mouse_down_func);
+    document.getElementById("mousey").addEventListener('mouseup', mouse_up_func);
+    
+    
+    function click_func(event_obj)
+    {
+      document.getElementById('output3').innerHTML = "MOUSE CLICK" 
+                                                   + get_mouse_event_stuff(event_obj);
+    }
+    function mouse_over_func(event_obj)
+    {
+      document.getElementById('output4').innerHTML =  "MOUSE OVER"
+                                                   + get_mouse_event_stuff(event_obj);
+    }
+    function mouse_out_func(event_obj)
+    {
+      document.getElementById('output5').innerHTML =  "MOUSE OUT"
+                                                   + get_mouse_event_stuff(event_obj);
+    }
+    function mouse_move_func(event_obj)
+    {
+      document.getElementById('output6').innerHTML =  "MOUSE MOVE"
+                                                   + get_mouse_event_stuff(event_obj);
+    }
+    function mouse_down_func(event_obj)
+    {
+      document.getElementById('output7').innerHTML =  "MOUSE DOWN"
+                                                   + get_mouse_event_stuff(event_obj);
+    }
+    function mouse_up_func(event_obj)
+    {
+      document.getElementById('output8').innerHTML =  "MOUSE UP"
+                                                   + get_mouse_event_stuff(event_obj);
+    }
+    
+    function get_mouse_event_stuff(event_obj)
+    {
+      return ": <br>"
+           + "screenX/screenY: "
+           + event_obj.screenX + "/"
+           + event_obj.screenY + "<br>"
+           + "clientX/clientY: "
+           + event_obj.clientX + "/"
+           + event_obj.clientY + "<br>"
+           + "pageX/pageY: "
+           + event_obj.pageX + "/"
+           + event_obj.pageY + "<br>";
+    }//end get mouse event stuff
+    
+    function key_down_func(event_obj)
+    {
+      //->this would work to prevent default actions-> eg:
+      //>function keys that the browser has set to do things,
+      //>Ctrl + key like save, open, etc
+      //>NOTE, ctrl + w ->close window will still work
+      //event_obj.preventDefault();
+      document.getElementById('output0').innerHTML = "KEY_DOWN: " + event_obj.key;
+      document.getElementById('out0_text').value += event_obj.key;
+    }
+    function key_press_func(event_obj)
+    {
+      document.getElementById('output1').innerHTML = "KEY_PRESS: " + event_obj.key;
+      document.getElementById('out1_text').value += event_obj.key;
+    }
+    function key_up_func(event_obj)
+    {
+      document.getElementById('output2').innerHTML = "KEY_UP: " + event_obj.key;
+      document.getElementById('out2_text').value += event_obj.key;
+    }
+  </script>
+</body>
+</html>
