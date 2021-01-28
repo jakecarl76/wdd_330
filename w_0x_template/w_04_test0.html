@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Week 4 Code Experiments 0</title>
+  <style>
+  </style>
+</head>
+<body>
+  <a href="index.html">&lt;Back</a>
+  
+  <h1> Key Test </h1>
+  <h2 id="f1"> Form 1 (no submission prevention): </h2>
+  <form action="../index.html" method="get">
+    <label for="f1_in1">Input 1:</label>
+    <input id="f1_in1" name="in_1" type="text">
+    <input type="submit" value="submit">
+  </form>
+  
+  <h2 id="f2"> Form 2 (inline submit event "return false;"): </h2>
+  
+  <form action="../index.html" onsubmit="return false;">
+    <label for="f1_in2">Input 2:</label>
+    <input id="f1_in2" name="in_2" type="text">
+    <input type="submit" value="submit">
+  </form>
+  
+  <h2 id="f3"> Form 3 (inline submit event "event.preventDefault();"): </h2>
+  
+  <form action="../index.html" onsubmit="event.preventDefault();">
+    <label for="f3_in2">Input 3:</label>
+    <input id="f3_in2" name="in_3" type="text">
+    <input type="submit" value="submit">
+  </form>
+  
+  <h2 id="f4"> Form 4 (submit event set to anonymous func -> return false): </h2>
+  
+  <form id="form4" action="../index.html">
+    <label for="f4_in2">Input 2:</label>
+    <input id="f4_in2" name="in_4" type="text">
+    <input type="submit" value="submit">
+  </form>
+  
+  <script>
+    document.getElementById("form4").addEventListener('submit', function(){event.preventDefault();});
+  </script>
+  
+  <h2 id="f5"> Form 5 (radio button test "alert(this['in_0'].value);"): </h2>
+  
+  <form id="form5" action="../index.html" onsubmit="alert(this['in_0'].value); return false; ">
+    <label for="f5_in0">Input a:</label>
+    <input id="f5_in0" name="in_0" type="radio" value="a">
+    <label for="f5_in1">Input b:</label>
+    <input id="f5_in1" name="in_0" type="radio" value="b">
+    <label for="f5_in2">Input c:</label>
+    <input id="f5_in2" name="in_0" type="radio" value="c">
+    <label for="f5_in3">Input d:</label>
+    <input id="f5_in3" name="in_0" type="radio" value="d">
+    
+    
+    <input type="submit" value="submit">
+  </form>
+  
+</body>
+</html>

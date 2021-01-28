@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<style>
+    body {
+        text-align: center;
+    }
+
+    .board {
+        display: grid;
+        grid-template-columns: repeat(3, auto);
+        margin: 50px auto;
+        width: 300px;
+        height: 300px;
+        background-color: grey;
+        grid-gap: 4px;
+    }
+
+    .board div {
+        background-color: white;
+        width: 100px;
+        height: 100px;
+        color:black;
+    }
+    .square {
+        line-height: 100px;
+        font-size:75px;
+    }
+</style>
+
+<body>
+    <main>
+        <div class="board divBoard">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <button id="reset">Reset</button>
+
+        <script>
+            const divBoard = document.querySelector(".divBoard");
+            const resetButton = document.getElementById("reset");
+            const Player1 = "X";
+            const Player2 = "O";
+            let player = Player1;
+
+
+            function addPiece(event) {
+                const clickedSquare =event.target;
+                clickedSquare.className="square";
+                clickedSquare.innerText=player;
+                //horizontalWin();
+                verticalWin();
+
+                if (player == Player1) {
+                    player = Player2
+                }
+                else if (player == Player2 ) {
+                    player = Player1
+                };
+                
+
+                
+            }
+            function checkWins() {
+
+            }
+            function verticalWin(){
+                let children = divBoard.children;
+                let win = false;
+
+                for(let i=0;i < 3; i++) {
+                    let test= "NA";
+                    if (children[i].innerHTML == "X") {
+                        test = "X";
+                    }
+                    else if (children[i].innerHTML == "O"){
+                        test="O";
+                    }
+                    console.log(test);
+                    if(children[i+3].innerHTML == test && children[i+6].innerHTML== test){
+                        win = true;
+                        console.log(win);
+                        return win;
+                    }
+                    
+                }console.log(win);
+                return win;
+
+            }
+            function horizontalWin() {
+                let children = divBoard.children;
+                let win = false;
+
+                for(let i=0;i < children.length; i+=3) {
+                    let test= "NA";
+                    if (children[i].innerHTML == "X") {
+                        test = "X";
+                    }
+                    else {
+                        test="O";
+                    }
+                    console.log(test);
+                    if(children[i+1].innerHTML == test && children[i+2].innerHTML== test){
+                        win = true;
+                        console.log(win);
+                        return win;
+
+                    }
+                    
+                }console.log(win);
+                return win;
+
+            }
+            
+            
+            
+            
+            function resetBoardDiv() {
+                const children = divBoard.children;
+                for (let i = 0; i < children.length; i++) {
+                    children[i].innerHTML = "";
+                }
+                //or
+                //const children = Array.from(divBoard.children);
+                //children.forEach((child) => child.innerText = "");
+
+            }
+            divBoard.addEventListener("touchend", addPiece);
+            divBoard.addEventListener("click", addPiece);
+            resetButton.addEventListener("click", resetBoardDiv);
+        </script>
+    </main>
+</body>
+
+</html>

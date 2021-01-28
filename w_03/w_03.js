@@ -307,7 +307,7 @@ var w_list = [
   },
   {
     type: "link",
-    label: "Team 1 Week 3 Team Activity",
+    label: "Team 1 Week 3 Team Activity, ",
     url: "group1_activity_Week03.html"
   }
   ]

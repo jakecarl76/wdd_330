@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Week 4 Code Experiments 1</title>
+  <style>
+  </style>
+</head>
+<body>
+  <a href="index.html">&lt;Back</a>
+  
+  <h1> Class/Object Prototype Test </h1>
+  <pre id="code_dis">
+  
+  </pre>
+  <script id="code">
+    class MyClass 
+    {
+      constructor (param1 = "a", param2 = "b", param3 = "c")
+      {
+        this.val1 = param1;
+        this.val2 = param2;
+        this.val3 = param3;
+      }
+      get_val_arr()
+      {
+        return [this.val1, this.val2, this.val3];
+      }
+    }
+    
+    let my_obj1 = new MyClass;
+
+    //Note that items added to prototype after an object is created is still
+    // retroactively added to those previously created objects.
+    
+    //Also note that the prototype does not seem to override prev. declared items
+    // (eg see where val3 is set to "BAD VAR" but does not change it from its default.)
+    
+    MyClass.prototype.val4 = "d";
+    MyClass.prototype.val3 = "BAD VAR";
+    MyClass.prototype.say_vals = function()
+      {
+        return "Vals: " + this.val1 + ", " + this.val2 + ", " + this.val3 + ", " + this.val4;
+      }
+    let my_obj2 = new MyClass;
+        
+    console.log("obj1:");
+    console.log(my_obj1.get_val_arr());
+    console.log("obj2:");
+    console.log(my_obj2.say_vals());
+    console.log("obj1:");
+    console.log(my_obj1.say_vals());
+    
+    //prototype value is shared among all instances so changing its value inthe prototype will change 
+    // it for all instances.
+    MyClass.prototype.val4 = "new-val";
+    console.log("changing a prototype property in the prototype (obj1.val4:obj2.val4):");
+    console.log(my_obj1.val4 + ":" + my_obj2.val4);
+    
+    //note that changing the added prototype value in an instance doesn't change it in all instances
+    //but seems to add it to the instance or replace the prototype value
+    my_obj1.val4 = "changed";
+    
+    console.log("changing a prototype property in an instance (obj1.val4:obj2.val4):");
+    console.log(my_obj1.val4 + ":" + my_obj2.val4);
+    
+    //Once attempting to change the prototype value in the object (instance), this seems to 
+    // create a var in the instance itself which "covers up" the prototype var. Evidance can be
+    // seen of this as it will no longer update with changes to the prototype var.
+    //eg note how changing the prototype value again does not update the instance which has
+    // had it's prototype attempted to be updated though the instance (my_obj1)
+    
+    MyClass.prototype.val4 = "new-new-value";
+    console.log("changing a prototype property in an instance (obj1.val4:obj2.val4):");
+    console.log(my_obj1.val4 + ":" + my_obj2.val4);
+    document.getElementById("code_dis").innerHTML = document.getElementById("code").innerHTML;
+  </script>
+</body>
+</html>
