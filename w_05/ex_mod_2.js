@@ -1,1 +1,1 @@
-export default def_var1 = "DEFAULT VAR !";
+export default const def_var1 = "DEFAULT VAR !";
