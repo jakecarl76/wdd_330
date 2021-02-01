@@ -14,8 +14,8 @@
   </div>
   
   <script type="module" src="ex_mod_0.js">
-    ex_01('output');
-    ex_02('output');
+    document.getElementById("ouput").innerHTML = ex_01();
+    document.getElementById("ouput").innerHTML += ex_02();
     
     
     //You can't us a module locally, need to do it over a server:
