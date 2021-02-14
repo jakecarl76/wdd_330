@@ -9,7 +9,7 @@ var w_list = [
   {
     type: "link",
     label: "toDos",
-    url: "toDos/index.html"
+    url: "toDOS/index.html"
   }
   ]
 }
