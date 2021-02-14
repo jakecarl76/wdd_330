@@ -1,0 +1,219 @@
+
+:root
+{
+  --bg-color: #0000FF;
+  --txt-color: #EAEAEA;
+  --txt-color-dark: #A6A6A6;
+}
+/*scrollbar*/
+::-webkit-scrollbar
+{
+  width: 25px;
+}
+::-webkit-scrollbar-track
+{
+  background: var(--txt-color);
+}
+::-webkit-scrollbar-thumb
+{
+  background: var(--txt-color-dark);
+}
+::-webkit-scrollbar-thumb:hover
+{
+  background:  #00FFFF;
+}
+::-webkit-scrollbar-button
+{
+  height: 25px;
+  background: url("imgs/dn_arrow.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: var(--txt-color);
+  background-size: 50%;
+}
+::-webkit-scrollbar-button:decrement
+{
+  height: 25px;
+  background: url("imgs/up_arrow.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: var(--txt-color);
+  background-size: 50%;
+
+}
+::-webkit-scrollbar-button:hover
+{
+  background-color: #00FFFF;
+}
+
+  h1
+  {
+    text-align: center;
+  }
+  label,
+  input,
+  body
+  {
+    background-color: var(--bg-color);
+    color: var(--txt-color);
+    font-family: monospace;
+    border: none;
+    outline: none;
+    font-size: 1.2em;
+  }
+  input[type="text"]
+  {
+    color: black;
+    background-color: #55AAAA;
+  }
+  input[type="text"]:focus
+  {
+    color: black;
+    background-color: #00FFFF;
+  }
+  ::placeholder
+  {
+    color: var(--txt-color);
+  }
+  input:focus::placeholder
+  {
+    color: #555;
+  }
+  
+  input[type="checkbox"] + label:before
+  {
+    content:"\2610";
+    font-size: 2em;
+  }
+  input[type="checkbox"]:checked + label:before
+  {
+    content:"\2612";
+    font-size: 2em;
+  }
+  input[type="checkbox"] + label:focus
+  {
+    color: var(--txt-color-dark);
+  }
+  
+  
+  input[type="radio"] + label
+  {
+    cursor: pointer;
+    background-color: var(--txt-color);
+    color: var(--bg-color);
+    box-shadow: none;
+    padding: 0.3em;
+  }
+  
+  input[type="radio"] +  label:focus,
+  input[type="radio"]:focus + label,
+  input[type="radio"] + label:hover
+  {
+    background-color: var(--txt-color-dark);
+  }
+  
+  input[type="radio"]:checked + label
+  {
+    cursor: pointer;
+    background-color: var(--txt-color-dark);
+    color: var(--bg-color);
+    box-shadow: 0.5em 0.5em rgba(0,0,0,0.55);
+  }
+  input[type="radio"]:checked + label:hover
+  {
+    background-color: var(--txt-color);
+  }
+  
+  input[type="button"]
+  {
+    cursor: pointer;
+    color: var(--bg-color);
+    background-color: var(--txt-color);
+    box-shadow: 0.5em 0.5em rgba(0,0,0,0.55);
+    margin: 0.5em;
+    padding: 0.3em 0.75em;
+  }
+  input[type="button"]:focus,
+  input[type="button"]:hover
+  {
+    background-color: var(--txt-color-dark);
+  }
+  
+  ul
+  {
+    list-style: none;
+    padding: 0;
+  }
+  #tasks li
+  {
+    display: flex;
+    justify-content: space-between;
+    align-items:baseline;
+  }
+  #tasks li span
+  {
+    text-align: left;
+    display: inline-block;
+    width: 100%;
+    padding-left: 0.3em;
+    font-size: 1.5em;
+  }
+  #welcome,
+  #main,
+  #remove_users
+  {
+    list-style: none;
+    margin: 0 auto;
+    max-width: 30em;
+    text-align:center;
+  }
+  #tasks
+  {
+    height: 70vh;
+    overflow-y: auto;
+  }
+  #main
+  {
+    height: 100vh;
+  }
+  input[id^="del_btn"],
+  input[id^="new_tsk_btn"]
+  {
+    box-shadow: none;
+    padding: 0.3em 0.5em;
+  }
+  
+  .displayed
+  {
+    display: block;
+  }
+  
+  .doc_alert
+  {
+    position: fixed;
+    background-color: var(--bg-color);
+    border: solid 2px var(--txt-color);
+    min-width: 80%;
+    text-align: center;
+    padding: 2em;
+    box-shadow: 2em 2em rgba(0,0,0,0.55);
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  .hidden
+  {
+    display: none;
+  }
+  
+  .line-through
+  {
+    text-decoration: line-through;
+  }
+  
+  #filter_tools
+  {
+    margin: 15px;
+  }
+  

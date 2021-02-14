@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link href="main.css" rel="stylesheet">
+  <title>To Do List</title>
+</head>
+<body>
+<h1>ToDOS</h1>
+
+<ul id="welcome">
+  <li>
+    <h2>Please enter your user name </h2>
+  </li>
+  <li>
+    <input placeholder="user name" type="text" id="user_name">
+  </li>
+  <li>
+    <input type="button" id="sign_in_btn" value="get my list">
+  </li>
+  <li>
+    <input type="button" id="rmv_usrs_btn" value="view users">
+  </li>
+</ul>
+
+<div id="main" class="hidden">
+
+  <ul id="tasks">
+  </ul>
+  <div id="filter_tools">
+    <span id="count"></span>
+    
+    <input type="radio" 
+           id="filter_all"
+           name="filter_radio"
+           class="hidden"
+           checked><label for="filter_all" tabindex="0" onsubmit="alert('poo');">All</label>
+    <input type="radio" 
+           id="filter_active"
+           name="filter_radio"
+           class="hidden"><label for="filter_active" tabindex="0">Active</label>
+    <input type="radio" 
+           id="filter_completed"
+           name="filter_radio"
+           class="hidden"><label for="filter_completed" tabindex="0">Completed</label>
+  </div>
+  
+  <div>
+    <input type="text" id="new_tsk_txt" placeholder="Add a new task">
+    <input type="button" id="new_tsk_btn" value="&#10133;">
+  </div>
+  <div>
+    <input type="button" id="logout_btn" value="logout">
+  </div>
+
+</div>
+
+<div id="remove_users" class="hidden">
+  <div id="all_users">
+  </div>
+  <input type="button" id="bk_btn" value="cancel">
+</div>
+
+
+<script src="./module/main.js" type="module">
+</script>
+
+<div id="doc_alert" class="doc_alert hidden">
+  <div id="doc_alert_msg"></div>
+  <input type="button" id="doc_alert_btn" value="OK">
+</div>
+
+<script>
+  //allow tabs to act like buttons with tab key 
+  document.body.addEventListener("keypress",
+    function (even)
+    {
+      if(event.keyCode == 13 || event.keyCode == 32)
+      {
+        let f_el = document.querySelector(":focus");
+        if(f_el.tagName == "LABEL")
+        {
+          f_el.click();
+        }
+      }
+    });
+</script>
+</body>
+</html>
