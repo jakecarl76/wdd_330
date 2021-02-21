@@ -26,6 +26,10 @@ var links_list = [
                    {
                      label: "Week6 - Midterm Checkin",
                      url: "w_06/index.html"
+                   },
+                   {
+                     label: "Week7",
+                     url: "w_07/index.html"
                    }
                  ];
                  
