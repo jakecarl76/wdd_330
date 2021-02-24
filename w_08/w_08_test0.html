@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Week 4 Code Experiments 0</title>
+  <style>
+  canvas
+  {
+    border: solid black 2px;
+  }
+  </style>
+</head>
+<body>
+  <a href="index.html">&lt;Back</a>
+  
+  <h1> Canvas Pixel Manipulation</h1>
+  <h2> Add a red dot </h2>
+  
+  <canvas id="canvas_1" width="200" height="400">
+    Sorry, your browser doesn't support canvas.
+  </canvas>
+  
+  <h2> Add a red dot with a helper object </h2>
+  
+  <canvas id="canvas_2">
+    Sorry, your browser doesn't support canvas.
+  </canvas>
+  
+<script>
+
+  //canvas 1
+  let can_1 = document.getElementById("canvas_1");
+  let ctxt_1 = can_1.getContext("2d");
+  let img_data_1 = ctxt_1.getImageData(0, 0, can_1.width, can_1.height );
+  
+  //find 'middle'-ish
+  let midw = img_data_1.width / 2;
+  let midh = img_data_1.height / 2;
+  //alert(midw + ":" + midh + ";" + can_1.width + ":" + can_1.height);
+  
+  //access arr of pixels -> each pixel 4 items in arr: r, g, b, a| 0 1 2 3
+    for(let j = midh * img_data_1.width * 4;
+      j < (midh * img_data_1.width * 4 + 5 * img_data_1.width * 4);
+      j += img_data_1.width * 4)
+  {
+    for(let i = midw * 4; i < midw * 4 + 20; i+=4)
+    { 
+      //image taken from "blank"image, so no pixels (even though background is white)
+      //Note that background is not taken with img. The background is considered
+      //clear even though it shows on screen as white (or some other color).
+      //All data in the imgData.data is thus zero (including alpha).
+      img_data_1.data[j + i] = 255;
+      img_data_1.data[j + i + 3] = 255;
+    }
+  }//END FOR SET PXs RED
+  
+  
+  
+  
+  
+  //put image back to canvas
+  ctxt_1.putImageData(img_data_1, 0, 0);
+
+  //canvas 2
+  let can_2 = document.getElementById("canvas_2");
+  let ctxt_2 = can_2.getContext("2d");
+  let img_dat = ctxt_2.getImageData(0, 0, can_2.width, can_2.height);
+  
+  //create helper object (pixel mover 2)
+  pxm2 = {
+    width: img_dat.width,
+    height: img_dat.height,
+    data: img_dat.data,
+    get_px: function (x, y)
+            {
+              index_st = y * this.height * this.width * 4;
+              index_st += x * 4;
+              tmp_px = [this.data[index_st],
+                        this.data[index_st + 1],
+                        this.data[index_st + 2],
+                        this.data[index_st + 3]];
+              return tmp_px;
+            },
+    set_px: function (x, y, px)
+            {
+              let index_st = y * this.width * 4;
+              index_st += x * 4;
+              this.data[index_st] = px[0];
+              this.data[index_st + 1] = px[1];
+              this.data[index_st + 2] = px[2];
+              this.data[index_st + 3] = px[3];
+            },
+  };
+  
+  pxm2.set_px(0,0, [255, 0 , 0 ,255]);
+  pxm2.set_px(1,1, [255, 0 , 0 ,255]);
+  pxm2.set_px(2,2, [255, 0 , 0 ,255]);
+  pxm2.set_px(3,3, [255, 0 , 0 ,255]);
+  pxm2.set_px(4,4, [255, 0 , 0 ,255]);
+  pxm2.set_px(5,5, [0, 255 , 0 ,255]);
+  pxm2.set_px(6,6, [0, 255 , 0 ,255]);
+  pxm2.set_px(7,7, [0, 255 , 0 ,255]); 
+  
+  let tmp_px = [255, 0, 0, 255];
+  for(row = 100; row < 120; row++)
+  {
+    for (col = 75; col < 95; col++)
+    {
+      
+      pxm2.set_px(col, row, tmp_px);
+    }
+  }  
+  
+  //re-apply img:
+  ctxt_2.putImageData(img_dat, 0, 0);
+</script>
+</body>
+</html>

@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Week 3 Code Experiments 2 - Russian Keyboard</title>
+  <style>
+    input
+    {
+      width: 100%;
+    }
+    textarea
+    {
+      width: 100%;
+      height: 1000px;
+    }
+    .key_row
+    {
+      display: flex;
+    }
+    .key_grid
+    {
+      display: inline-grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      background-color: gray;
+      border: solid lightgray 2px;
+      border-radius: 5px;
+      width: 3em;
+      height: 3em;
+      text-align: center;
+    }
+    .special_key_grid
+    {
+      display: inline-grid;
+      grid-template-columns: 1fr;
+      align-items: center;
+      background-color: gray;
+      border: solid lightgray 2px;
+      border-radius: 5px;
+      text-align: center;
+    }
+    .key_label_eng_two_row
+    {
+      grid-row: 1 / span 2;
+      color: black;
+    }
+    .key_label_russ_two_row
+    {
+      grid-row: 1 / span 2;
+      color: darkred;
+      grid-column:2;
+    }
+    .key_label_eng
+    {
+      color: black;
+    }
+    .key_label_russ
+    {
+      color: darkred;
+    }
+    .key_down
+    {
+      background-color: darkgray;
+    }
+  </style>
+</head>
+<body>
+
+  <a href="index.html">&lt;Back</a>
+  <h1> Russian Keyboard </h1>
+  <h2 id="t"> Press any key: </h2>
+  <div id="output0"></div>
+  <div id="keyboard_dis">
+  </div>
+  
+  <script>
+
+    let russ_key_map = {'`' : 'ё', 
+                        '~' : 'Ё',
+                        '1' : '1',
+                        '!' : '!',
+                        '2' : '2',
+                        '@' : '"',
+                        '3' : '3',
+                        '#' : '№',
+                        '4' : '4',
+                        '$' : ';',
+                        '5' : '5',
+                        '%' : '%',
+                        '6' : '6',
+                        '^' : ':', 
+                        '7' : '7',
+                        '&' : '?',
+                        '8' : '8',
+                        '*' : '*',
+                        '9' : '9',
+                        '(' : '(',
+                        '0' : '0',
+                        ')' : ')',
+                        '-' : '-',
+                        '_' : '_',
+                        '=' : '=',
+                        '+' : '+',
+                        'q' : 'й',
+                        'w' : 'ц',
+                        'e' : 'у',
+                        'r' : 'к',
+                        't' : 'е',
+                        'y' : 'н',
+                        'u' : 'г',
+                        'i' : 'ш',
+                        'o' : 'щ',
+                        'p' : 'з',
+                        '[' : 'х',
+                        '{' : 'Х',
+                        ']' : 'ъ',
+                        '}' : 'Ъ',
+                        '\\' : '\\',
+                        '|' : '/',
+                        'a' : 'ф',
+                        's' : 'ы',
+                        'd' : 'в',
+                        'f' : 'а',
+                        'g' : 'п',
+                        'h' : 'р',
+                        'j' : 'о',
+                        'k' : 'л',
+                        'l' : 'д',
+                        ';' : 'ж',
+                        ':' : 'Ж',
+                        '\'' : 'э',
+                        '"' : 'Э',
+                        'z' : 'я',
+                        'x' : 'ч',
+                        'c' : 'с',
+                        'v' : 'м',
+                        'b' : 'и',
+                        'n' : 'т',
+                        'm' : 'ь',
+                        ',' : 'б',
+                        '<' : 'Б',
+                        '.' : 'ю',
+                        '>' : 'Ю',
+                        '/' : '.',
+                        '?' : ','
+                        };
+    let key_map = {  0:'`', 
+                     1:'~',
+                     2:'1',
+                     3:'!',
+                     4:'2',
+                     5:'@',
+                     6:'3',
+                     7:'#',
+                     8:'4',
+                     9:'$',
+                    10:'5',
+                    11:'%',
+                    12:'6',
+                    13:'^', 
+                    14:'7',
+                    15:'&',
+                    16:'8',
+                    17:'*',
+                    18:'9',
+                    19:'(',
+                    20:'0',
+                    21:')',
+                    22:'-',
+                    23:'_',
+                    24:'=',
+                    25:'+',
+                    26:'q',
+                    27:'w',
+                    28:'e',
+                    29:'r',
+                    30:'t',
+                    31:'y',
+                    32:'u',
+                    33:'i',
+                    34:'o',
+                    35:'p',
+                    36:'[',
+                    37:'{',
+                    38:']',
+                    39:'}',
+                    40:'\\',
+                    41:'|',
+                    42:'a',
+                    43:'s',
+                    44:'d',
+                    45:'f',
+                    46:'g',
+                    47:'h',
+                    48:'j',
+                    49:'k',
+                    50:'l',
+                    51:';',
+                    52:':',
+                    53:'\'',
+                    54:'"',
+                    55:'z',
+                    56:'x',
+                    57:'c',
+                    58:'v',
+                    59:'b',
+                    60:'n',
+                    61:'m',
+                    62:',',
+                    63:'<',
+                    64:'.',
+                    65:'>',
+                    66:'/',
+                    67:'?'
+                   };
+            
+                   
+    let id_map = {};
+    document.body.addEventListener('keydown', key_down_func);
+    document.body.addEventListener('keyup', key_up_func);
+    
+    create_russ_keyboard();
+    
+    function key_up_func(event_obj)
+    {
+      let tmp_var = event_obj.key.toLowerCase();
+      let tmp_char = russ_key_map[tmp_var];
+      if(event.shiftKey && tmp_char != undefined)
+      {
+        tmp_char = tmp_char.toUpperCase();
+      }
+      
+      //update keyboard 'display'
+      let tmp_class = [id_map[tmp_var]];
+      
+      //check that was associated, if not check special keys
+      if (tmp_class[0] == undefined)
+      {
+        tmp_class = [id_map["l" + tmp_var], id_map["r" + tmp_var]];
+      }
+      
+      //check for and change class for each key
+      for(let i = 0; i < tmp_class.length; i++)
+      {
+        let tmp_el = document.getElementById(tmp_class[i]);
+        //remove class
+        tmp_el.classList.remove('key_down');
+        //else already done
+      }//end for each key to 'press'
+    }
+    
+    function key_down_func(event_obj)
+    {
+      //->this would work to prevent default actions-> eg:
+      //>function keys that the browser has set to do things,
+      //>Ctrl + key like save, open, etc
+      //>NOTE, ctrl + w ->close window will still work
+      //event_obj.preventDefault();
+      let tmp_var = event_obj.key.toLowerCase();
+      let tmp_char = russ_key_map[tmp_var];
+      if(event.shiftKey && tmp_char != undefined)
+      {
+        tmp_char = tmp_char.toUpperCase();
+      }
+      
+      //update keyboard 'display'
+      let tmp_class = [id_map[tmp_var]];
+      
+      //check that was associated, if not check special keys
+      if (tmp_class[0] == undefined)
+      {
+        tmp_class = [id_map["l" + tmp_var], id_map["r" + tmp_var]];
+      }
+      
+      //check for and change class for each key
+      for(let i = 0; i < tmp_class.length; i++)
+      {
+        let tmp_el = document.getElementById(tmp_class[i]);
+        if(!tmp_el.classList.contains('key_down'))
+        {
+          tmp_el.classList.add('key_down');
+        }
+        //else already done
+      }//end for each key to 'press'
+      
+      document.getElementById('output0').innerHTML = "KEY_DOWN: " + tmp_char;
+    }
+    
+    function create_russ_keyboard()
+    {
+      //init id_num
+      let id_num = 0;
+      //anchor div
+      let tmp_anchor_div = document.getElementById('keyboard_dis');
+      //create first rows
+      let tmp_row = document.createElement('div');
+      tmp_row.className = "key_row";
+      tmp_anchor_div.appendChild(tmp_row);
+      
+      //begin first row of keys (0-25 in key map), 4 row keys
+      for(let i = 0; i <= 25; i += 2, id_num++)
+      {
+        let tmp_key = document.createElement('div');
+        tmp_key.className = "key_grid";
+        tmp_key.id = "key_" + id_num;
+        tmp_row.appendChild(tmp_key);
+        
+        //add keys
+        for(let j = 0; j < 2; j++)
+        {
+          //eng
+          let tmp_char_div = document.createElement('div');
+          tmp_char_div.className = "key_label_eng";
+          tmp_char_div.innerHTML = key_map[i + j];
+          tmp_key.appendChild(tmp_char_div);
+          //russ
+          tmp_char_div = document.createElement('div');
+          tmp_char_div.className = "key_label_russ";
+          tmp_char_div.innerHTML = russ_key_map[key_map[i + j]];
+          tmp_key.appendChild(tmp_char_div);
+          
+          //associate ids
+          id_map[key_map[i + j]] = "key_" + id_num;
+        }//END FOR EACH ENG CHAR ON KEY
+      }//END FOR EACH KEY IN FIRST ROW (0-25)
+      
+      //add in backspace key
+      let tmp_key = document.createElement('div');
+      tmp_key.className = "special_key_grid";
+      tmp_key.id = "key_" + id_num;
+      tmp_key.style.minWidth = "9em";
+      tmp_row.appendChild(tmp_key);
+  
+      //associate ids
+      id_map['backspace'] = "key_" + id_num;
+      id_num++;
+      
+      let tmp_char_div = document.createElement('div');
+      tmp_char_div.className = "key_label_eng";
+      tmp_char_div.innerHTML = "BACKSPACE";
+      tmp_key.appendChild(tmp_char_div);
+      
+      //CREATE ROW 2
+      tmp_row = document.createElement('div');
+      tmp_row.className = "key_row";
+      tmp_anchor_div.appendChild(tmp_row);
+      
+      //add tab key
+      tmp_key = document.createElement('div');
+      tmp_key.className = "special_key_grid";
+      tmp_key.id = "key_" + id_num;
+      tmp_key.style.minWidth = "5em";
+      tmp_row.appendChild(tmp_key);
+      
+      tmp_char_div = document.createElement('div');
+      tmp_char_div.className = "key_label_eng";
+      tmp_char_div.innerHTML = "TAB";
+      tmp_key.appendChild(tmp_char_div);
+      
+      
+      //associate ids
+      id_map['tab'] = "key_" + id_num;
+      id_num++;
+  
+      //Q-P (2 char keys, eng/rus, 26-35)
+      for(let i = 26; i <= 35; i++, id_num++)
+      {
+        let tmp_key = document.createElement('div');
+        tmp_key.className = "key_grid";
+        tmp_key.id = "key_" + id_num;
+        tmp_row.appendChild(tmp_key);
+        
+        //eng
+        let tmp_char_div = document.createElement('div');
+        tmp_char_div.className = "key_label_eng_two_row";
+        tmp_char_div.innerHTML = key_map[i];
+        tmp_key.appendChild(tmp_char_div);
+        //russ
+        tmp_char_div = document.createElement('div');
+        tmp_char_div.className = "key_label_russ_two_row";
+        tmp_char_div.innerHTML = russ_key_map[key_map[i]];
+        tmp_key.appendChild(tmp_char_div);
+        
+        
+        //associate ids
+        id_map[key_map[i]] = "key_" + id_num;
+      }//END FOR EACH KEY IN 2ND ROW Q-P(26-35)
+      
+      //Do last three keys of second row (3, 3 4)
+      for(let i = 36; i <= 39; i += 2, id_num++)
+      {
+        let tmp_key = document.createElement('div');
+        tmp_key.className = "key_grid";
+        tmp_key.id = "key_" + id_num;
+        tmp_row.appendChild(tmp_key);
+        
+        //eng
+        let tmp_char_div = document.createElement('div');
+        tmp_char_div.className = "key_label_eng";
+        tmp_char_div.innerHTML = key_map[i];
+        tmp_key.appendChild(tmp_char_div);
+        //russ
+        tmp_char_div = document.createElement('div');
+        tmp_char_div.className = "key_label_russ_two_row";
+        tmp_char_div.innerHTML = russ_key_map[key_map[i]];
+        tmp_key.appendChild(tmp_char_div);
+        //eng
+        tmp_char_div = document.createElement('div');
+        tmp_char_div.className = "key_label_eng";
+        tmp_char_div.innerHTML = key_map[i + 1];
+        tmp_key.appendChild(tmp_char_div);
+        
+        //associate ids
+        id_map[key_map[i]] = "key_" + id_num;
+        id_map[key_map[i + 1]] = "key_" + id_num;
+      }//END FOR 2nd to last two keys in second row (bracket keys)
+      
+      //add on last key (a four char key)
+      tmp_key = document.createElement('div');
+      tmp_key.className = "key_grid";
+      tmp_key.id = "key_" + id_num;
+      tmp_key.style.minWidth = "7em";
+      tmp_row.appendChild(tmp_key);
+      
+      
+      //add keys
+      for(let j = 0, i = 40; j < 2; j++)
+      {
+        //eng
+        let tmp_char_div = document.createElement('div');
+        tmp_char_div.className = "key_label_eng";
+        tmp_char_div.innerHTML = key_map[i + j];
+        tmp_key.appendChild(tmp_char_div);
+        //russ
+        tmp_char_div = document.createElement('div');
+        tmp_char_div.className = "key_label_russ";
+        tmp_char_div.innerHTML = russ_key_map[key_map[i + j]];
+        tmp_key.appendChild(tmp_char_div);
+        
+        //associate ids
+        id_map[key_map[i + j]] = "key_" + id_num;
+      }//END FOR EACH ENG CHAR ON KEY
+      id_num++;
+      
+      
+      //CREATE ROW 3
+      tmp_row = document.createElement('div');
+      tmp_row.className = "key_row";
+      tmp_anchor_div.appendChild(tmp_row);
+      
+      //add capslock key
+      tmp_key = document.createElement('div');
+      tmp_key.className = "special_key_grid";
+      tmp_key.id = "key_" + id_num;
+      tmp_key.style.minWidth = "6em";
+      tmp_row.appendChild(tmp_key);
+      
+      tmp_char_div = document.createElement('div');
+      tmp_char_div.className = "key_label_eng";
+      tmp_char_div.innerHTML = "CAPS LOCK";
+      tmp_key.appendChild(tmp_char_div);
+      
+      //associate ids
+      id_map["capslock"] = "key_" + id_num;
+      id_num++;
+      
+      //Q-P (2 char keys, eng/rus, 26-35)
+      for(let i = 42; i <= 50; i++, id_num++)
+      {
+        let tmp_key = document.createElement('div');
+        tmp_key.className = "key_grid";
+        tmp_key.id = "key_" + id_num;
+        tmp_row.appendChild(tmp_key);
+        
+        //eng
+        let tmp_char_div = document.createElement('div');
+        tmp_char_div.className = "key_label_eng_two_row";
+        tmp_char_div.innerHTML = key_map[i];
+        tmp_key.appendChild(tmp_char_div);
+        //russ
+        tmp_char_div = document.createElement('div');
+        tmp_char_div.className = "key_label_russ_two_row";
+        tmp_char_div.innerHTML = russ_key_map[key_map[i]];
+        tmp_key.appendChild(tmp_char_div);
+        
+        //associate ids
+        id_map[key_map[i]] = "key_" + id_num;
+      }//END FOR EACH KEY IN 2ND ROW Q-P(26-35)
+      
+      //Do last three keys of second row (3, 3 4)
+      for(let i = 51; i <= 54; i += 2, id_num++)
+      {
+        let tmp_key = document.createElement('div');
+        tmp_key.className = "key_grid";
+        tmp_key.id = "key_" + id_num;
+        tmp_row.appendChild(tmp_key);
+        
+        //eng
+        let tmp_char_div = document.createElement('div');
+        tmp_char_div.className = "key_label_eng";
+        tmp_char_div.innerHTML = key_map[i];
+        tmp_key.appendChild(tmp_char_div);
+        //russ
+        tmp_char_div = document.createElement('div');
+        tmp_char_div.className = "key_label_russ_two_row";
+        tmp_char_div.innerHTML = russ_key_map[key_map[i]];
+        tmp_key.appendChild(tmp_char_div);
+        //eng
+        tmp_char_div = document.createElement('div');
+        tmp_char_div.className = "key_label_eng";
+        tmp_char_div.innerHTML = key_map[i + 1];
+        tmp_key.appendChild(tmp_char_div);
+        
+        
+        //associate ids
+        id_map[key_map[i]] = "key_" + id_num;
+        id_map[key_map[i + 1]] = "key_" + id_num;
+      }//END FOR 3rd to last two keys
+      
+      //Add in last key (Enter)
+      tmp_key = document.createElement('div');
+      tmp_key.className = "special_key_grid";
+      tmp_key.id = "key_" + id_num;
+      tmp_key.style.minWidth = "9em";
+      tmp_row.appendChild(tmp_key);
+      
+      tmp_char_div = document.createElement('div');
+      tmp_char_div.className = "key_label_eng";
+      tmp_char_div.innerHTML = "ENTER";
+      tmp_key.appendChild(tmp_char_div);
+      
+      //associate ids
+      id_map["enter"] = "key_" + id_num;
+      id_num++;
+      
+      //CREATE ROW 4
+      tmp_row = document.createElement('div');
+      tmp_row.className = "key_row";
+      tmp_anchor_div.appendChild(tmp_row);
+      
+      //add SHIFT key
+      tmp_key = document.createElement('div');
+      tmp_key.className = "special_key_grid";
+      tmp_key.id = "key_" + id_num;
+      tmp_key.style.minWidth = "8em";
+      tmp_row.appendChild(tmp_key);
+      
+      tmp_char_div = document.createElement('div');
+      tmp_char_div.className = "key_label_eng";
+      tmp_char_div.innerHTML = "SHIFT";
+      tmp_key.appendChild(tmp_char_div);
+      
+      //associate ids
+      id_map["lshift"] = "key_" + id_num;
+      id_num++;
+      
+      //z-m (2 char keys, eng/rus, 55-61)
+      for(let i = 55; i <= 61; i++, id_num++)
+      {
+        let tmp_key = document.createElement('div');
+        tmp_key.className = "key_grid";
+        tmp_key.id = "key_" + id_num;
+        tmp_row.appendChild(tmp_key);
+        
+        //eng
+        let tmp_char_div = document.createElement('div');
+        tmp_char_div.className = "key_label_eng_two_row";
+        tmp_char_div.innerHTML = key_map[i];
+        tmp_key.appendChild(tmp_char_div);
+        //russ
+        tmp_char_div = document.createElement('div');
+        tmp_char_div.className = "key_label_russ_two_row";
+        tmp_char_div.innerHTML = russ_key_map[key_map[i]];
+        tmp_key.appendChild(tmp_char_div);
+        
+        //associate ids
+        id_map[key_map[i]] = "key_" + id_num;
+      }//END FOR EACH KEY IN 4th ROW 
+      
+      //Do last two keys of forth row (3, 3, 4)
+      for(let i = 62; i <= 65; i += 2, id_num++)
+      {
+        let tmp_key = document.createElement('div');
+        tmp_key.className = "key_grid";
+        tmp_key.id = "key_" + id_num;
+        tmp_row.appendChild(tmp_key);
+        
+        //eng
+        let tmp_char_div = document.createElement('div');
+        tmp_char_div.className = "key_label_eng";
+        tmp_char_div.innerHTML = key_map[i];
+        tmp_key.appendChild(tmp_char_div);
+        //russ
+        tmp_char_div = document.createElement('div');
+        tmp_char_div.className = "key_label_russ_two_row";
+        tmp_char_div.innerHTML = russ_key_map[key_map[i]];
+        tmp_key.appendChild(tmp_char_div);
+        //eng
+        tmp_char_div = document.createElement('div');
+        tmp_char_div.className = "key_label_eng";
+        tmp_char_div.innerHTML = key_map[i + 1];
+        tmp_key.appendChild(tmp_char_div);
+        
+        //associate ids
+        id_map[key_map[i]] = "key_" + id_num;
+        id_map[key_map[i + 1]] = "key_" + id_num;
+      }//END FOR 2nd to last keys 
+      
+      //add on last key (a four char key)
+      tmp_key = document.createElement('div');
+      tmp_key.className = "key_grid";
+      tmp_key.id = "key_" + id_num;
+      tmp_row.appendChild(tmp_key);
+      
+      //add keys
+      for(let j = 0, i = 66; j < 2; j++)
+      {
+        //eng
+        let tmp_char_div = document.createElement('div');
+        tmp_char_div.className = "key_label_eng";
+        tmp_char_div.innerHTML = key_map[i + j];
+        tmp_key.appendChild(tmp_char_div);
+        //russ
+        tmp_char_div = document.createElement('div');
+        tmp_char_div.className = "key_label_russ";
+        tmp_char_div.innerHTML = russ_key_map[key_map[i + j]];
+        tmp_key.appendChild(tmp_char_div);
+        
+        //associate ids
+        id_map[key_map[i + j]] = "key_" + id_num;
+      }//END FOR EACH ENG CHAR ON KEY
+      id_num++;
+      
+      //Add on final shift key
+      tmp_key = document.createElement('div');
+      tmp_key.className = "special_key_grid";
+      tmp_key.id = "key_" + id_num;
+      tmp_key.style.minWidth = "10.5em";
+      tmp_row.appendChild(tmp_key);
+      
+      tmp_char_div = document.createElement('div');
+      tmp_char_div.className = "key_label_eng";
+      tmp_char_div.innerHTML = "SHIFT";
+      tmp_key.appendChild(tmp_char_div);
+      
+      //associate ids
+      id_map["rshift"] = "key_" + id_num;
+      id_num++;
+      
+      //CREATE ROW 5
+      tmp_row = document.createElement('div');
+      tmp_row.className = "key_row";
+      tmp_anchor_div.appendChild(tmp_row);
+      
+      //add Ctrl key
+      tmp_key = document.createElement('div');
+      tmp_key.className = "special_key_grid";
+      tmp_key.id = "key_" + id_num;
+      tmp_key.style.minWidth = "5em";
+      tmp_row.appendChild(tmp_key);
+      
+      tmp_char_div = document.createElement('div');
+      tmp_char_div.className = "key_label_eng";
+      tmp_char_div.innerHTML = "CTRL";
+      tmp_key.appendChild(tmp_char_div);
+      
+      //associate ids
+      id_map["lcontrol"] = "key_" + id_num;
+      id_num++;
+      
+      
+      //add blank key
+      tmp_key = document.createElement('div');
+      tmp_key.className = "special_key_grid";
+      tmp_key.style.minWidth = "6em";
+      tmp_row.appendChild(tmp_key);
+      
+      tmp_char_div = document.createElement('div');
+      tmp_char_div.className = "key_label_eng";
+      tmp_char_div.innerHTML = "";
+      tmp_key.appendChild(tmp_char_div);
+      
+      
+      //add alt key
+      tmp_key = document.createElement('div');
+      tmp_key.className = "special_key_grid";
+      tmp_key.id = "key_" + id_num;
+      tmp_key.style.minWidth = "3em";
+      tmp_row.appendChild(tmp_key);
+      
+      tmp_char_div = document.createElement('div');
+      tmp_char_div.className = "key_label_eng";
+      tmp_char_div.innerHTML = "ALT";
+      tmp_key.appendChild(tmp_char_div);
+      
+      //associate ids
+      id_map["lalt"] = "key_" + id_num;
+      id_num++;
+      
+      //add space bar key
+      tmp_key = document.createElement('div');
+      tmp_key.className = "key_grid";
+      tmp_key.id = "key_" + id_num;
+      tmp_key.style.minWidth = "17em";
+      tmp_row.appendChild(tmp_key);
+      
+      tmp_char_div = document.createElement('div');
+      tmp_char_div.className = "key_label_eng";
+      tmp_char_div.innerHTML = "";
+      tmp_key.appendChild(tmp_char_div);
+            
+      //associate ids
+      id_map[" "] = "key_" + id_num;
+      id_num++;
+      
+      //add alt key
+      tmp_key = document.createElement('div');
+      tmp_key.className = "special_key_grid";
+      tmp_key.id = "key_" + id_num;
+      tmp_key.style.minWidth = "3em";
+      tmp_row.appendChild(tmp_key);
+      
+      tmp_char_div = document.createElement('div');
+      tmp_char_div.className = "key_label_eng";
+      tmp_char_div.innerHTML = "ALT";
+      tmp_key.appendChild(tmp_char_div);
+      
+      //associate ids
+      id_map["ralt"] = "key_" + id_num;
+      id_num++;
+      
+      //add Ctrl key
+      tmp_key = document.createElement('div');
+      tmp_key.className = "special_key_grid";
+      tmp_key.id = "key_" + id_num;
+      tmp_key.style.minWidth = "5em";
+      tmp_row.appendChild(tmp_key);
+      
+      tmp_char_div = document.createElement('div');
+      tmp_char_div.className = "key_label_eng";
+      tmp_char_div.innerHTML = "CTRL";
+      tmp_key.appendChild(tmp_char_div);
+      
+      //associate ids
+      id_map["rcontrol"] = "key_" + id_num;
+      id_num++;
+      
+    }//END FUNC CREATE RUSS KEYBOARD DISPLAY
+  </script>
+</body>
+</html>
