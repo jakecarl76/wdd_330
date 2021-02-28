@@ -1,5 +1,5 @@
 var w_list = [
-{ assignment_name: "W0x Reading: Javascript Novice to Ninja 2<sup>nd</sup> Edition chapters x, x, and x",
+{ assignment_name: "W08 Reading: Javascript Novice to Ninja 2<sup>nd</sup> Edition chapters 8 and 12",
   assignment_list: [
   
   {
@@ -8,58 +8,21 @@ var w_list = [
     url: "w_08_test0.html"
   },
   {
-    type: "note",
-    note: "Chapter x: _"
-  },
-  {
     type: "link",
-    label: "<img src='imgs/img_xx.png'>",
-    url: "imgs/img_xx.png"
-  },
-  {
-    type: "link",
-    label: "<img src='imgs/img_xx.png'>",
-    url: "imgs/img_xx.png"
-  },
-  {
-    type: "note",
-    note: "Chapter x: _"
-  },
-  {
-    type: "link",
-    label: "<img src='imgs/img_xx.png'>",
-    url: "imgs/img_xx.png"
-  },
-  {
-    type: "link",
-    label: "<img src='imgs/img_xx.png'>",
-    url: "imgs/img_xx.png"
-  },
-  {
-    type: "note",
-    note: "Chapter x: _"
-  },
-  {
-    type: "link",
-    label: "<img src='imgs/img_xx.png'>",
-    url: "imgs/img_xx.png"
-  },
-  {
-    type: "link",
-    label: "<img src='imgs/img_xx.png'>",
-    url: "imgs/img_xx.png"
-  },
+    label: "Code Experiment 1 (unsuccessful canvas pixel experiments)",
+    url: "w_08_test1.html"
+  }
   ]
 },
-{ assignment_name: "W0X Team Activity",
+{ assignment_name: "W08 Team Activity",
   assignment_list: [
   {
     type: "note",
-    note: "Participated in team activity."
+    note: "Was the coder for the team this week."
   },
   {
     type: "link",
-    label: "Team 1 Week X Team Activity, ",
+    label: "Team 1 Week 8 Team Activity, ",
     url: "group_activity_week_08/starwars_api.html"
   }
   ]

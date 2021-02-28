@@ -1,78 +1,335 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Week x Code Experiments 1</title>
+  <title>Week 8 Code Experiments 1</title>
   <style>
+  canvas
+  {
+    border: solid black 2px;
+  }
   </style>
 </head>
 <body>
   <a href="index.html">&lt;Back</a>
   
-  <h1> Class/Object Prototype Test </h1>
-  <pre id="code_dis">
+  <h1> Canvas Pixel Manipulation</h1>
+  <h2> Add a red dot </h2>
   
-  </pre>
-  <script id="code">
-    class MyClass 
-    {
-      constructor (param1 = "a", param2 = "b", param3 = "c")
-      {
-        this.val1 = param1;
-        this.val2 = param2;
-        this.val3 = param3;
-      }
-      get_val_arr()
-      {
-        return [this.val1, this.val2, this.val3];
-      }
-    }
-    
-    let my_obj1 = new MyClass;
+  <canvas id="canvas_1" width="200" height="400">
+    Sorry, your browser doesn't support canvas.
+  </canvas>
+  
+  <h2> Add a red dot with a helper object </h2>
+  
+  <canvas id="canvas_2">
+    Sorry, your browser doesn't support canvas.
+  </canvas>
+  
+  <button onclick="update_mod2()"> do thing </button>
+  
+<script>
 
-    //Note that items added to prototype after an object is created is still
-    // retroactively added to those previously created objects.
-    
-    //Also note that the prototype does not seem to override prev. declared items
-    // (eg see where val3 is set to "BAD VAR" but does not change it from its default.)
-    
-    MyClass.prototype.val4 = "d";
-    MyClass.prototype.val3 = "BAD VAR";
-    MyClass.prototype.say_vals = function()
+  //canvas 1
+  let can1 = document.getElementById("canvas_1");
+  let ctxt1 = can1.getContext("2d");
+  let img_data_1 = ctxt1.getImageData(0, 0, can1.width, can1.height );
+  
+  
+     //canvas 2 -> place one px
+     //canvas 2
+  let can2 = document.getElementById("canvas_2");
+  let ctxt2 = can2.getContext("2d");
+  let imgdata = ctxt2.getImageData(0, 0, can2.width, can2.height);
+  
+  //create helper object (pixel mover 2)
+  pxm2 = {
+    width: imgdata.width,
+    height: imgdata.height,
+    data: imgdata.data,
+    get_px: function (x, y)
+            {
+              index_st = y * this.width * 4;
+              index_st += x * 4;
+              tmp_px = [this.data[index_st],
+                        this.data[index_st + 1],
+                        this.data[index_st + 2],
+                        this.data[index_st + 3]];
+              return tmp_px;
+            },
+    set_px: function (x, y, px)
+            {
+              let index_st = y * this.width * 4;
+              index_st += x * 4;
+              this.data[index_st] = px[0];
+              this.data[index_st + 1] = px[1];
+              this.data[index_st + 2] = px[2];
+              this.data[index_st + 3] = px[3];
+            },
+  };
+  
+  
+  pxm2.set_px(100,50, [123, 0 , 1 ,255]);
+  pxm2.set_px(100,20, [124, 0 , 23 ,255]);
+  pxm2.set_px(100,40, [153, 20 , 0 ,255]);
+  
+  
+  ctxt2.putImageData(imgdata, 0, 0);
+
+  function update_mod2()
+  {
+     //canvas 2
+  let can2 = document.getElementById("canvas_2");
+  let ctxt2 = can2.getContext("2d");
+  let imgdata = ctxt2.getImageData(0, 0, can2.width, can2.height);
+  
+  //create helper object (pixel mover 2)
+  pxm2 = {
+    width: imgdata.width,
+    height: imgdata.height,
+    data: imgdata.data,
+    get_px: function (x, y)
+            {
+              let index_st = y *this.width * 4;
+              index_st += x * 4;
+              let tmp_px = [this.data[index_st],
+                        this.data[index_st + 1],
+                        this.data[index_st + 2],
+                        this.data[index_st + 3]];
+              return tmp_px;
+            },
+    set_px: function (x, y, px)
+            {
+              let index_st = y * this.width * 4;
+              index_st += x * 4;
+              this.data[index_st] = px[0];
+              this.data[index_st + 1] = px[1];
+              this.data[index_st + 2] = px[2];
+              this.data[index_st + 3] = px[3];
+            },
+  };
+  
+  update_pxs_fall_mod(pxm2);
+  
+  ctxt2.putImageData(imgdata, 0, 0);
+  }//END UPDATE MOD 2
+  
+  //r=0-127 -> down motion
+  //r=128 -> stopped
+  //r=129-255 -> up motion
+  //g -> left motion
+  //b -> rightmotion 
+  function update_pxs_fall_mod(h_obj)
+  {
+    //pull reffs
+    let h = h_obj.height;
+    let w = h_obj.width;
+    //for each row
+    for(let r = 0; r < h; r++)
+    {
+      //for each col
+      for(let c = 0; c < w; c++)
       {
-        return "Vals: " + this.val1 + ", " + this.val2 + ", " + this.val3 + ", " + this.val4;
-      }
-    let my_obj2 = new MyClass;
+        //cur x,y = c,r
+        //get target x,y
+        let t_x = c;
+        let t_y = r;
+        //get px (has momentum data)
+        let px = h_obj.get_px(c,r);
+        //skip non pxs
+        if(px[3] == 0)
+        {
+          continue;
+        }
         
-    console.log("obj1:");
-    console.log(my_obj1.get_val_arr());
-    console.log("obj2:");
-    console.log(my_obj2.say_vals());
-    console.log("obj1:");
-    console.log(my_obj1.say_vals());
-    
-    //prototype value is shared among all instances so changing its value inthe prototype will change 
-    // it for all instances.
-    MyClass.prototype.val4 = "new-val";
-    console.log("changing a prototype property in the prototype (obj1.val4:obj2.val4):");
-    console.log(my_obj1.val4 + ":" + my_obj2.val4);
-    
-    //note that changing the added prototype value in an instance doesn't change it in all instances
-    //but seems to add it to the instance or replace the prototype value
-    my_obj1.val4 = "changed";
-    
-    console.log("changing a prototype property in an instance (obj1.val4:obj2.val4):");
-    console.log(my_obj1.val4 + ":" + my_obj2.val4);
-    
-    //Once attempting to change the prototype value in the object (instance), this seems to 
-    // create a var in the instance itself which "covers up" the prototype var. Evidance can be
-    // seen of this as it will no longer update with changes to the prototype var.
-    //eg note how changing the prototype value again does not update the instance which has
-    // had it's prototype attempted to be updated though the instance (my_obj1)
-    
-    MyClass.prototype.val4 = "new-new-value";
-    console.log("changing a prototype property in an instance (obj1.val4:obj2.val4):");
-    console.log(my_obj1.val4 + ":" + my_obj2.val4);
-    document.getElementById("code_dis").innerHTML = document.getElementById("code").innerHTML;
-  </script>
+        //init collision vars
+        let coll_x = false;
+        let coll_y = false;
+        let coll_px = false;
+        
+        //check if pixel us underline (if not at edge
+        let px_under = false;
+        if(r != h_obj.height - 1)
+        {
+          let tmp_px = h_obj.get_px(c, r + 1);
+          if(tmp_px[3] != 0)
+          {
+            px_under = true;
+          }
+        }
+        else
+        {
+          //on edge, like a px is under it
+          px_under = true;
+        }
+        
+        //check up/down momentum
+        if(px[0] != 128 || !px_under)
+        {
+          px[0] -= 9;
+          //check neg
+          if(px[0] < 0)
+          {
+            px[0] = 0;
+          }
+        }//end add momentum
+        
+        
+        //calc target pts//
+        //CALC X
+        if(px[1] > 0)
+        {
+          //green left motion
+          t_x -= px[1];
+          
+          //check border
+          if(t_x < 0)
+          {
+            t_x = 0;
+            coll_x = true;
+          }
+        }
+        else if(px[2] > 0)
+        {
+          //blue right motion
+          t_x += px[2];
+          //border check
+          if(t_x >= h_obj.width)
+          {
+            t_x = h_obj.width - 1;
+            coll_x = true;
+          }
+        }
+        //else both zero->nomotion, x stays same
+        
+        //CALC Y
+        if(px[0] > 128)
+        {
+          //up motion
+          t_y -= px[0] - 128;
+          //border check
+          if(t_y < 0)
+          {
+            t_y = 0;
+            coll_y = true;
+          }
+        }
+        else if(px[0] < 128)
+        {
+          //down motion
+          t_y += 128 - px[0];//difference is speed, 128 = 0, 127 = 1, ...
+          //border check
+          if(t_y >= h)
+          {
+            t_y = h - 1;
+            coll_y = true;
+          }
+        }
+        
+        //check target px. 
+        //if other px there determine where to set next to and impart energy
+        let tmp_px = h_obj.get_px(t_x, t_y);
+        if(tmp_px[3] > 0)
+        {
+          //px there
+          //other px
+          let o_x = t_x;
+          let o_y = t_y;
+          //figure out new placement
+          if(c < t_x)
+          {
+            t_x--;
+          }
+          else if(c > t_x)
+          {
+            t_x++;
+          }
+          
+          if(r < t_y)
+          {
+            t_y--;
+          }
+          else if(r > t_y)
+          {
+            t_y++;
+          }
+          //figure out collision energy, little less than half given to each
+          let coll_px = [Math.round((px[0]- 128) * 4),
+                         Math.round(px[1] * 0.4),
+                         Math.round(px[2] * 0.4),
+                         0];
+          //add to other px
+          let o_px = h_obj.get_px(o_x, o_y);
+          for(i = 0; i < 4; i++)
+          {
+            o_px[i] += coll_px[i];
+            if(o_px[i] > 255)
+            {
+              o_px[i] = 255;
+            }
+            else if(o_px[i] < 0)
+            {
+              o_px[i] = 0;
+            }
+          }//end add to each color
+          
+          h_obj.set_px(o_x, o_y, o_px);
+          
+          //set target pixel momentums
+          coll_px[0] *= -1;
+          coll_px[0] += 128;
+          //check limits
+          if(coll_px[0] > 255)
+          {
+            coll_px[0] = 255;
+          }
+          else if(coll_px[0] < 0)
+          {
+            coll_px[0] = 0;
+          }
+          
+          let g = coll_px[1];
+          let b = coll_px[2];
+          coll_px[1] = b;
+          coll_px[2] = g;
+          
+          //set curr px spot to blank
+          h_obj.set_px(c, r, [0, 0, 0, 0]);
+          //set target px
+          h_obj.set_px(t_x, t_y, coll_px);
+          
+        }
+        else
+        {
+          //no px there
+          //move to spot
+          
+          //check for border collisions
+          if(coll_y)
+          {
+            px[0] = Math.round(((px[0] - 128) * -0.4) + 128);
+          }
+          
+          if(coll_x)
+          {
+            let g = Math.round(px[1] * -0.4);
+            let b = Math.round(px[2] * -0.4);
+            px[1] = b;
+            px[2] = g;
+          }
+          
+          //set curr px spot to blank
+          h_obj.set_px(c, r, [0, 0, 0, 0]);
+          //set target px
+          h_obj.set_px(t_x, t_y, px);
+          console.log("x:"+ t_x + "y:" + t_y);
+          //alert(px);
+        }
+        
+      }//END FOR EACH COL
+    }//END FOR EACH ROW
+  
+  }//END UPDATE PIX FALL MOD
+  
+</script>
 </body>
 </html>
