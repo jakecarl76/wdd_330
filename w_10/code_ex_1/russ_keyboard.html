@@ -83,14 +83,14 @@
                                            // or it seems to violate cross scripting protection policies
   
   //create new Russian keyboard 
-  //const russ_kb = new RussKeyBoard("russ_");
-  const russ_kb = new RussKeyBoard("russ_");
+  //const russ_key_board = new RussKeyBoard("russ_");
+  const russ_key_board = new RussKeyBoard("russ_");
   let key_dis = document.getElementById("keyboard_dis");
-  key_dis.appendChild(russ_kb.create_russ_keyboard());
+  key_dis.appendChild(russ_key_board.create_russ_keyboard());
   
   //attach listeners to russ obj's functions
-  document.body.addEventListener('keydown', function(event){russ_kb.key_down_func(event)});
-  document.body.addEventListener('keyup', function(event){russ_kb.key_up_func(event)});
+  document.body.addEventListener('keydown', function(event){russ_key_board.key_down_func(event)});
+  document.body.addEventListener('keyup', function(event){russ_key_board.key_up_func(event)});
   </script>
 </body>
 </html>

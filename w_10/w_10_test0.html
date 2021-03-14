@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Week 10 Code Experiments 0</title>
+  <style>
+  </style>
+</head>
+<body>
+  <a href="index.html">&lt;Back</a>
+  
+  <h1> Key Test </h1>
+  <h2 id="f1"> (default key action prevention): </h2>
+  <p>
+    The purpose of this test is to show that the default action of the key can be
+    prevented. This will allow use of keys like the <strong>F1</strong> key without
+    its default interaction with the browser interfearing.
+  </p>
+  <h3>Key Pressed: </h3>
+  <div id="output_div"></div>
+  <script>
+    document.body.addEventListener("keydown", show_key)
+    
+    function show_key(event)
+    {
+      event.preventDefault();
+      document.getElementById("output_div").innerHTML = event.key;
+    }
+  </script>
+  
+  <p style="height: 10000px">
+    <strong>NOTE:</strong> Still does not work for some keyboard short cuts
+    such as <strong>Ctrl + w</strong> (close tab)
+    or <strong>Ctrl + PageUp/PageDown</strong> (next/prev tab)
+    <br>
+    This will be used in the game when it is not paused. Using the pause button
+    will allow keys to work again (ie will not preventDefault() when paused).
+  </p>
+  
+</body>
+</html>
