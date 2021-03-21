@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Week 3 Code Experiments 2 - Russian Keyboard</title>
+  <meta charset="utf-8">
+  <style>
+    input
+    {
+      width: 100%;
+    }
+    textarea
+    {
+      width: 100%;
+      height: 1000px;
+    }
+    .key_row
+    {
+      display: flex;
+    }
+    .key_grid
+    {
+      display: inline-grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      background-color: gray;
+      border: solid lightgray 2px;
+      border-radius: 5px;
+      width: 3em;
+      height: 3em;
+      text-align: center;
+    }
+    .special_key_grid
+    {
+      display: inline-grid;
+      grid-template-columns: 1fr;
+      align-items: center;
+      background-color: gray;
+      border: solid lightgray 2px;
+      border-radius: 5px;
+      text-align: center;
+    }
+    .key_label_eng_two_row
+    {
+      grid-row: 1 / span 2;
+      color: black;
+    }
+    .key_label_russ_two_row
+    {
+      grid-row: 1 / span 2;
+      color: darkred;
+      grid-column:2;
+    }
+    .key_label_eng
+    {
+      color: black;
+    }
+    .key_label_russ
+    {
+      color: darkred;
+    }
+    .key_down
+    {
+      background-color: darkgray;
+    }
+  </style>
+  <script src="eng_key_map.js"></script>
+  <script src="russ_keyboard.js"></script>
+</head>
+<body>
+
+  <a href="index.html">&lt;Back</a>
+  <h1> Russian Keyboard </h1>
+  <h2 id="t"> Press any key: </h2>
+  <div id="output0"></div>
+  <div id="keyboard_dis">
+  </div>
+  
+  <script>
+  //import russ keyboard
+  //import RussKey from 'russ_keyboard.js';//apparently to use modules (at least in chrome)
+                                           // need to have type="module" att in script tag and
+                                           // it is only allowed to be run from a server (not locally)
+                                           // or it seems to violate cross scripting protection policies
+  
+  //create new Russian keyboard 
+  //const russ_key_board = new RussKeyBoard("russ_");
+  const russ_key_board = new RussKeyBoard("russ_");
+  let key_dis = document.getElementById("keyboard_dis");
+  key_dis.appendChild(russ_key_board.create_russ_keyboard());
+  
+  //attach listeners to russ obj's functions
+  document.body.addEventListener('keydown', function(event){russ_key_board.key_down_func(event)});
+  document.body.addEventListener('keyup', function(event){russ_key_board.key_up_func(event)});
+  </script>
+</body>
+</html>

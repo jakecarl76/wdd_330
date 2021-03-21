@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Week 3 Code Experiments 2 - Russian Keyboard</title>
+  <meta charset="utf-8">
+  <style>
+    input
+    {
+      width: 100%;
+    }
+    textarea
+    {
+      width: 100%;
+      height: 1000px;
+    }
+    .key_row
+    {
+      display: flex;
+    }
+    .key_grid
+    {
+      display: inline-grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      background-color: gray;
+      border: solid lightgray 2px;
+      border-radius: 5px;
+      width: 3em;
+      height: 3em;
+      text-align: center;
+    }
+    .special_key_grid
+    {
+      display: inline-grid;
+      grid-template-columns: 1fr;
+      align-items: center;
+      background-color: gray;
+      border: solid lightgray 2px;
+      border-radius: 5px;
+      text-align: center;
+    }
+    .key_label_eng_two_row
+    {
+      grid-row: 1 / span 2;
+      color: black;
+    }
+    .key_label_russ_two_row
+    {
+      grid-row: 1 / span 2;
+      color: darkred;
+      grid-column:2;
+    }
+    .key_label_eng
+    {
+      color: black;
+    }
+    .key_label_russ
+    {
+      color: darkred;
+    }
+    .key_down
+    {
+      background-color: darkgray;
+    }
+    
+    
+    
+    #output_el
+    {
+      height: 1em;
+      font-size: 1em;
+      font-family: inherit;
+    }
+    
+    
+    
+    .show_answer
+    {
+      color: darkgray;
+    }
+    
+    .bad_answer
+    {
+      color: red;
+      display: inline-block;
+      animation: shake_once 0.3s ease-in;
+    }
+    
+    @keyframes shake_once
+    {
+      0%{transform: translateY(20px);}
+      25%{transform: translateY(-17px);}
+      45%{transform: translateY(15px);}
+      65%{transform: translateY(-12px);}
+      80%{transform: translateY(9px);}
+      90%{transform: translateY(-7px);}
+      95%{transform: translateY(5px);}
+      100%{transform: translateY(0px);}
+    }
+  </style>
+  <script src="eng_qwerty_key_map.js"></script>
+  <script src="russ_keyboard.js"></script>
+  <script src="questionBankController.js"></script>
+  <script src="questionController.js"></script>
+  <script src="inputController.js"></script>
+</head>
+<body>
+
+  <a href="index.html">&lt;Back</a>
+  <h1> Russian Keyboard </h1>
+  <h2 id="t"> Press any key: </h2>
+  <div id="score_el"></div>
+  <div id="game_area"></div>
+  <div id="prompt_el"></div>
+  <pre id="output_el"></pre>
+  <div id="keyboard_dis">
+  </div>
+  
+  <script>
+  
+//Function escapes regex chars in given string and returns updated string
+function excape_regex_chars(str)
+{
+  //first the escape char
+  str = str.replace(/\\/g, "\\\\");
+  //()
+  str = str.replace(/\(/g, "\\(");
+  str = str.replace(/\)/g, "\\)");
+  
+  //+
+  str = str.replace(/\+/g, "\\+");
+  
+  //=
+  str = str.replace(/\=/g, "\\=");
+  
+  //-
+  str = str.replace(/\-/g, "\\-");
+  
+  //?
+  str = str.replace(/\?/g, "\\?");
+  
+  //*
+  str = str.replace(/\*/g, "\\*");
+  
+  //^
+  str = str.replace(/\^/g, "\\^");
+  
+  //^
+  str = str.replace(/\./g, "\\.");
+  
+  return str;
+}
+
+////////////////////////////PX HELPER/////////////////////////////////////
+function get_px_helper(imgdata)
+{
+  return {  width: imgdata.width,
+            height: imgdata.height,
+            data: imgdata.data,
+            data_ref: imgdata,
+            get_ref: function()
+                     {
+                       return this.data_ref;
+                     },
+            get_px: function (x, y)
+                    {
+                      index_st = y * this.width * 4;
+                      index_st += x * 4;
+                      tmp_px = [this.data[index_st],
+                                this.data[index_st + 1],
+                                this.data[index_st + 2],
+                                this.data[index_st + 3]];
+                      return tmp_px;
+                    },
+            set_px: function (x, y, px)
+                    {
+                      let index_st = y * this.width * 4;
+                      index_st += x * 4;
+                      this.data[index_st] = px[0];
+                      this.data[index_st + 1] = px[1];
+                      this.data[index_st + 2] = px[2];
+                      this.data[index_st + 3] = px[3];
+                    }
+          };
+}
+
+  
+  //////////////////GAME CONTROLLER///////////////////////////////////
+    //controls the game
+  class GameController
+  {
+    constructor()
+    {
+      this.score = 0;//working value, game eninge can manipulate as a resource for game
+      this.total_score = 0;//totlal points earned (no negative)
+      this.actual_score = 0;//actualy how they are performing (includes negative points)
+      
+      this.game_el = null;
+      this.score_display_el = null;
+      
+      this.busy = false;
+      this.paused = false;
+      
+      this.canvas_w = 0;
+      this.canvas_h = 0;
+      this.canvas = null;
+      this.ctxt = null; //canvas context 2D obj
+      
+      this.canv_objs = [];//array of items that need to be added to canvas
+      this.player = null;
+      
+      this.game_clocks = [];//timers for certain updates
+      this.game_ticks = []; //current time or ticks until update func run
+      this.game_updates = [];//the update funcs
+      this.game_rpm = 100;//default game update 100ms
+      this.game_engine = null;
+    }
+    
+    /////DVDVDVDVDVDVDV create test func to add bar to canvas etc, test intervals
+    //and updating canvas, score, etc..
+    
+    //game eninge runs, updates game
+      //every interval runs check func
+        //check func updates and checks clock arr.
+        
+        //clock arr [time1][time2][time-n]
+        //obj arr   [obj1] [obj2] [obj n]
+        //each obj has an update func that updates its thing (player, monster, etc)
+        //also will hav ref in canv_objs arr, have a diff func-> draw
+    init()
+    {
+      //set attributes (width/height)
+      this.canvas_w = 1000;
+      this.canvas_h = 400;
+    
+      //create and insert canvas obj
+      this.canvas = document.createElement("CANVAS");
+      this.canvas.width = this.canvas_w;
+      this.canvas.height = this.canvas_h;
+      this.game_el.appendChild(this.canvas);
+      //get 2d context
+      this.ctxt = this.canvas.getContext("2d");
+      
+      
+      //set interval
+      let tmp_var = this;
+      this.game_engine = setInterval(function(){tmp_var.engine_cycle();}, this.game_rpm);
+      
+      //set the game clocks/ticks
+      //run dec. function every 5 seconds, dec by 2 every 15 seconds
+      this.game_clocks = [5000, 15000];
+      this.game_ticks = [5000, 15000];
+      this.game_updates = [
+        function(){tmp_var.update_func_1();console.log("update1");},
+        function(){tmp_var.update_func_2();console.log("update2");},
+        
+      ];
+    }
+    
+    //returns a px_helper obj
+    get_canvas_img()
+    {
+      let tmp_img_dat = this.ctxt.getImageData(0, 0, this.canvas.width, this.canvas.height);
+      return get_px_helper(tmp_img_dat);
+    }
+    
+    //requires and uses a px_helper obj to update the canvas
+    set_canvas_img(px_helper)
+    {
+      
+      this.ctxt.putImageData(px_helper.get_ref(), 0, 0);
+    }
+    set_game_el(el)
+    {
+      this.game_el = el;
+    }
+    set_score_display_el(el)
+    {
+      this.score_display_el = el;
+    }
+    
+    //DVDVDVDVDVDV   Create a test func to run via set interval
+    //to see about using ref etc with the interval to access this obj/ref to canvas etc
+    
+    engine_cycle()
+    { //get img
+      let tmp_img = this.get_canvas_img();
+      
+      //update px
+      for(let i = 0; i < tmp_img.width; i++)
+      {
+        for(let j = 0; j < tmp_img.height; j++)
+        {
+          if(this.score > 0 && i < this.score)
+          {
+            tmp_img.set_px(i, j, [0, 255, 0, 255]);
+          }
+          else if(this.score < 0 && i < Math.abs(this.score))
+          {
+            tmp_img.set_px(i, j, [255, 0, 0, 255]);
+          }
+          else
+          {
+            tmp_img.set_px(i, j, [0, 0, 0, 0]);
+          }
+        }
+      }
+      //update img
+      this.set_canvas_img(tmp_img);
+      console.log("CYCLE");
+      this.check_clocks();
+    }//END FUNC ENGINE CYCLE
+    
+    check_clocks()
+    {
+      for(let i = 0; i < this.game_clocks.length; i++)
+      {
+        //update
+        this.game_ticks[i] -= this.game_rpm;
+        //check
+        if(this.game_ticks[i] <= 0)
+        {
+          //run func
+          this.game_updates[i]();
+          //reset clock
+          this.game_ticks[i] = this.game_clocks[i];
+        }
+      }
+    }//END FUNC CHECK CLOCKS
+    
+    
+    update_func_1()
+    {
+      let tmp_img = this.get_canvas_img();
+      
+      //flash blue
+      for(let i = 0; i < tmp_img.width; i++)
+      {
+        for(let j = 0; j < tmp_img.height; j++)
+        {
+            tmp_img.set_px(i, j, [0, 0, 255, 255]);
+        }
+      }
+      //update img
+      this.set_canvas_img(tmp_img);
+      
+      //decrement score
+      this.score--;
+    }
+    update_func_2()
+    {
+      let tmp_img = this.get_canvas_img();
+      
+      //flash yellow
+      for(let i = 0; i < tmp_img.width; i++)
+      {
+        for(let j = 0; j < tmp_img.height; j++)
+        {
+            tmp_img.set_px(i, j, [255, 255, 0, 255]);
+        }
+      }
+      //update img
+      this.set_canvas_img(tmp_img);
+      
+      //decrease score
+      this.score -= 2;
+    }
+    is_busy()
+    {
+      return this.busy;
+    }
+    
+    is_paused()
+    {
+      return this.paused;
+    }
+    
+    toggle_pause()
+    {
+      this.paused = !this.paused;
+      console.log(this.paused);
+      clearInterval(this.game_engine);//DVDVDVDVDVDVDVDV
+    }
+    
+    add_points(points)
+    {
+      //update actual score
+      this.actual_score += points;
+      if(points < 0)
+      {//negative points
+        this.score += points
+      }
+      else if(points > 0)
+      {//positive points
+        this.score += points;
+        this.total_score += points;
+      }
+      //else do nothing: 0 points -> backspace, typing full answer, etc
+      
+      this.update_score();
+    }//END FUNC ADD POINTS
+    
+    update_score()
+    {//DVDVDVDVDVDV
+      this.score_display_el.innerHTML = "<div>SCORE: " + this.score + "</div> <div> TOTAL SCORE: "
+                             + this.total_score + "</div>";
+    }
+  }//END GAME CONTROLLER CLASS
+  
+
+  
+  //////////////////APP CONTROLLER/////////////////////////////////////
+    //connects all modules and helps them to interact/pass info to one another
+  class AppController
+  {
+    constructor(rand_order = true)
+    {
+      this.input_c = null;
+      this.q_bank =  null;
+      this.game_c =  null;
+      this.q_c    =  null;
+      this.random_order = rand_order;
+    }
+    
+    init()
+    {
+      const app_controller = this;
+      //add listening events to body to pick up input
+      document.body.addEventListener("keydown", 
+                                     function(event)
+                                     {
+                                       app_controller.key_down_event(event);
+                                     });
+      document.body.addEventListener("keyup", 
+                                     function(event)
+                                     {
+                                       app_controller.key_up_event(event);
+                                     });
+      //everything should be set, check
+      if(   this.input_c == null
+         || this.q_bank  == null
+         || this.game_c  == null
+         || this.q_c     == null)
+      {
+        //log error
+        console.log("Error AppController.init(). Not all controllers have been set.");
+        return;
+      }
+      
+      //give the question controller ref to its bank
+      this.q_c.set_question_bank(this.q_bank);
+      //init question controllerdvdvdvdvdvDVDVDVDVDVDVDVDV
+      
+      this.q_c.gen_q_list(this.random_order);
+      this.game_c.set_game_el(document.getElementById("game_area"));
+      this.game_c.init();
+      
+    }//END FUNC INIT()
+    
+    set_input_controller(input_obj)
+    {
+      this.input_c = input_obj;
+    }
+    set_bank_controller(q_bank_obj)
+    {
+      this.q_bank = q_bank_obj;
+    }
+    set_game_controller(game_c_obj)
+    {
+      this.game_c = game_c_obj;
+    }
+    set_question_controller(q_c_obj)
+    {
+      this.q_c = q_c_obj;
+    }
+    
+    
+    key_down_event(event)
+    {
+      if(event.key == "Pause")
+      {
+        console.log("pause");
+        this.game_c.toggle_pause();
+        return;
+      }
+      
+      //else
+      //other issues prevent input extraction/giving to question controller?
+      
+      //is special key?
+      if(event.key == "Shift")
+      {
+        return;
+      }
+      
+      
+      //get_curr_q_input
+      let input_dev = this.q_c.get_input_dev();
+      console.log(input_dev);
+      let tmp_input = this.input_c.input_key_down(input_dev, event);
+      
+      
+      
+      //do stuff only if not hold set from game controller
+      if(!this.game_c.is_busy() && !this.game_c.is_paused())
+      {
+        let points = this.q_c.check_input(tmp_input);
+        this.game_c.add_points(points);
+      
+        //check if list is done
+          //depends on game what does next (ie game goes though list once only?
+                                           //game repeats list until game done? etc)
+      }
+      
+      
+    }//END KEY DOWN EVENT FUNC
+    
+    key_up_event(event)
+    {
+      //get curr q input
+      let input_dev = this.q_c.get_input_dev();
+      
+      this.input_c.input_key_up(input_dev, event);
+    }//END KEY UP EVENT FUNC
+    
+    
+  }//END APP CONTROLLER CLASS
+  /////////////////////////////////////////////////////////////////////////////
+  
+  
+  
+  
+  //Test Program:
+  
+  let tmp_list = "";
+  
+  
+  //create new Russian keyboard 
+  //const russ_key_board = new RussKeyBoard("russ_");
+  const qwerty_map = EngQWERTYKeyMap.getKeyMap()
+  const russ_key_board = new RussKeyBoard("russ_", qwerty_map);
+  let key_dis = document.getElementById("keyboard_dis");
+  key_dis.appendChild(russ_key_board.create_russ_keyboard());
+  
+  //Old way to show key strokes
+  //attach listeners to russ obj's functions
+  //document.body.addEventListener('keydown', function(event){russ_key_board.key_down_func(event)});
+  //document.body.addEventListener('keyup', function(event){russ_key_board.key_up_func(event)});
+  
+  
+  //create a temp list
+  for(let i = 0; i < 25; i++)
+  {
+    let word_len = Math.floor(Math.random() * 10) + 1;
+    let tmp_eng_char = "";
+    let tmp_char = "";
+    for(let k = 0; k < word_len; k++)
+    {
+      let tmp_new_char = qwerty_map[(Math.floor(Math.random() * 67))]
+      let capitalize = Math.random() * 50;
+    
+      if(capitalize > 20)
+      {
+        tmp_eng_char += tmp_new_char.toUpperCase();
+        tmp_char += russ_key_board.russ_key_map[tmp_new_char].toUpperCase();
+      }
+      else
+      {
+        tmp_eng_char += tmp_new_char;
+        tmp_char += russ_key_board.russ_key_map[tmp_new_char];
+      }
+    }
+    
+    
+    
+    tmp_list += "FRPN[RUSS]MC#0A#2I#5Q#10S#7, " + tmp_char + ", " + tmp_char + " \n";
+  }//END CREATE TEMP LIST
+  
+  //create new controller. Main input board is eng qwerty
+  const input_obj = new InputController(qwerty_map);
+  //add the Russ keyboard input dev
+  input_obj.set_device(russ_key_board, "RUSS");
+  
+  
+  const g_ctl = new GameController();
+  g_ctl.set_score_display_el(document.getElementById("score_el"));
+ 
+  const q_ctl = new QuestionController();
+  q_ctl.set_prompt_el(document.getElementById("prompt_el"));
+  q_ctl.set_output_el(document.getElementById("output_el"));
+
+  //create questions list and extract list
+  let q_bank = new QuestionBankController(tmp_list);
+  q_bank.extract_from_text();
+  console.log(q_bank);
+
+  //create new app controller and set its diff components
+  const app_c = new AppController();
+  app_c.set_input_controller(input_obj);
+  app_c.set_bank_controller(q_bank);
+  app_c.set_game_controller(g_ctl);
+  app_c.set_question_controller(q_ctl);
+  
+  //set body events
+  app_c.init();
+  ////DVDVDVDVDVDVDVDV
+  
+  
+  
+  
+  
+  
+  
+  
+  //NOTES:
+  /////////////settings controller?///////////////////////
+  //holds settings audio settings
+  
+  /////////////audio controller///////////////////////
+  //holds mute/volume settings
+  //plays sounds
+  
+  
+  //TODO
+  //indication to user for question if is full/live question
+  //correct answer animation
+    //remove/set class that has an animate once on input field
+      //flashes borders or something quick that won't be affected by
+      //user answering next question right away or get in the way of 
+      //them doing so.
+  
+  //design basic game to test
+  //design save/load module
+  //design rest of stuff lol
+  //make JavaScript components modules
+  //probably should make constructors of controllers accept init vals
+    //instead of init-ing them with functions as much.
+  
+  
+  //pause/unpaused animations
+  
+  
+  //////////////////game engine//////////////////////////////
+  //will have question hold in case the game wants you to wait to ask questions
+    //ie during a "cut scene" or perhaps they are only asked/answered during certain
+    //phases of the game. Thus, the app module checks for holds/paused from game
+    //module before sending input to the questonsController module
+    
+    
+    //has player obj? controls the player based off "score", actions cost score pts
+    //game controller has setInterval to update game logic.
+      //When paused need to cancel Interval, reset when un-paused
+      //Controller will need diff countdown counters for when actions need to happen
+        //eg enemy moves forward every x seconds but interval ends every x/10 seconds etc
+        //when interval ends/activates runs a function that runs though "check list" to update game
+    //player looses ->GAME OVER ->coin slots to "pay agian?"/return to menu screen
+  </script>
+</body>
+</html>
