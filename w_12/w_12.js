@@ -3,14 +3,12 @@ var w_list = [
   assignment_list: [
   {
     type: "note",
-    note: "Many modules have been pretty well figured out how they should be/interact. "
-        + " Separated many of them into different files and created a <strong>very</strong> basic game. "
-        + " (type on your keyboard and then press enter to submit the answer. Positive score is green, negative is red. Score slowly decreases on flashes. 'game' does not have end)"
+    note: "I've gotten most of the other pages done. Most everything interacts with each other now. Added many new features and streamlined constructors/game init. Now has a login system, ability to view/edit different lists, ability to delete profile."
   },
   {
     type: "link",
     label: "Typeing Game (figuring out modules etc)",
-    url: "russ_typing_game/russ_keyboard.html"
+    url: "russ_typing_game/index.html"
   },
   
 
