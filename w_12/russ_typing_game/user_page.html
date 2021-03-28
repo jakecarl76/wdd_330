@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Your Profile</title>
+  <meta charset="utf-8">
+<link rel="stylesheet" href="main.css">
+<script src="userStorage.js"></script>
+<script src="profileManager.js"></script>
+</head>
+<body>
+<header>
+  <h1> [NAME_HERE] ARCADE</h1>
+  <img id="main_banner_img" src="">
+</header>
+<main>
+<h1> GAMES GAMES GAMES and more games!</h1>
+<p>
+  here is some sample text to try on for size!!
+</p>
+
+<div id="user_profile">
+</div>
+
+<div id="user_options">
+</div>
+
+<div id="user_lists">
+</div>
+
+</main>
+<footer>
+
+</footer>
+<script>
+  const user_storage = new UserStorage();
+  user_storage.test_list();
+  console.log(user_storage);
+  const profile_manager = new ProfileManager(user_storage);
+  profile_manager.create_profile_insert("user_profile");
+  profile_manager.create_user_options_insert("user_options");
+  profile_manager.create_user_lists_insert("user_lists");
+  
+  /*document.getElementById("login_btn").addEventListener("click", 
+                                                        function()
+                                                        {
+                                                          let tmp_user = document.getElementById("user_name").value;
+                                                          user_storage.login_user(tmp_user);
+                                                          
+                                                          //make sure no error before going to user page
+                                                          if(user_storage.get_user() != null)
+                                                          {
+                                                            //go to user page
+                                                            window.location.href = "user_page.html";
+                                                          }
+                                                        }
+                                                        );*/
+                                                        
+
+  
+</script>
+</body>
+</html>

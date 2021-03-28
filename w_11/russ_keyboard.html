@@ -86,6 +86,29 @@
       animation: shake_once 0.3s ease-in;
     }
     
+    .good_answer_a
+    {
+      animation: flash_correct_a 0.2s ease-in;
+    }
+    
+    @keyframes flash_correct_a
+    {
+      0%{box-shadow: 0px 0px 0px 0px lightgreen;}
+      50%{box-shadow: 0px 0px 10px 10px lightgreen;}
+      100%{box-shadow: 0px 0px 0px 0px lightgreen;}
+    }
+    .good_answer_b
+    {
+      animation: flash_correct_b 0.2s ease-in;
+    }
+    
+    @keyframes flash_correct_b
+    {
+      0%{box-shadow: 0px 0px 0px 0px lightgreen;}
+      50%{box-shadow: 0px 0px 10px 10px lightgreen;}
+      100%{box-shadow: 0px 0px 0px 0px lightgreen;}
+    }
+    
     @keyframes shake_once
     {
       0%{transform: translateY(20px);}

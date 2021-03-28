@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>List Editor</title>
+  <meta charset="utf-8">
+<link rel="stylesheet" href="main.css">
+<script src="userStorage.js"></script>
+<script src="profileManager.js"></script>
+</head>
+<body>
+<header>
+  <h1> [NAME_HERE] ARCADE</h1>
+  <img id="main_banner_img" src="">
+</header>
+<main>
+<h1> List Editor </h1>
+<p>
+  here is some sample text to try on for size!!
+</p>
+
+<div id="user_profile">
+</div>
+
+<div id="editor_div">
+</div>
+
+<div id="">
+</div>
+
+</main>
+<footer>
+
+</footer>
+<script>
+  const user_storage = new UserStorage();
+  //user_storage.test_list();
+  console.log(user_storage);
+  const profile_manager = new ProfileManager(user_storage);
+  profile_manager.create_profile_insert("user_profile");
+  //DVDVDVDVDVDVDVDVDVDVDV
+  profile_manager.create_list_edit_insert("editor_div");
+  //add panels for creating list
+  //add create button
+  //add cancel button (ie just a back button to profile)
+  
+  //Get from url if creating new or editing old
+  
+  //if editing old get:
+    //list num from url
+    //via list num: list name -> place into appropriate field
+    //via list num: list text -> place into appropriate field
+  
+  //when saving exitsint list:
+    //warn user will replace old list-> prompt "are you sure you want to replace?"
+    //also warn that saving new will reset old high/last scores -> 0
+      //also reset high/last score games to empty str ""
+</script>
+</body>
+</html>

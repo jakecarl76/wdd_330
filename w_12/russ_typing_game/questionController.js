@@ -6,25 +6,63 @@
   //returns object to controller of what to do (ie, nothing, good/bad points to give game controller)
   class QuestionController
   {
-    constructor(bank_ref = null)
+    constructor(prompt_el = null, 
+                output_el = null,
+                q_type_dis_el = null, 
+                live_img_src = "",
+                full_img_src = "",
+                bank_ref = null
+                )
     {
       this.q_bank = bank_ref;
       this.curr_input = "";
       this.curr_input_display = "";
-      this.output_el = null;
-      this.prompt_el = null;
+      this.output_el = output_el;
+      this.prompt_el = prompt_el;
+      this.ans_type_display = q_type_dis_el;
+      this.full_type_img = full_img_src;
+      this.live_type_img = live_img_src;
       this.q_len = -1;
       this.curr_q_num = -1;
       this.curr_q = null;
       this.q_list = [];
       this.curr_strike = 0;//hard/soft limit counter
       this.round = 0;
+      this.list_done = true;
     }
     
     set_question_bank(bank_ref)
     {
       this.q_bank = bank_ref;
-      this.q_len = q_bank.get_num_questions();
+      this.q_len = this.q_bank.get_num_questions();
+      console.log("Q_LEN: " + this.q_len);
+    }
+    
+    set_answer_type_display(el)
+    {
+      this.ans_type_display = el;
+    }
+    
+    set_live_type_img(img_link)
+    {
+      this.live_type_img = img_link;
+    }
+    
+    set_full_type_img(img_link)
+    {
+      this.full_type_img = img_link;
+    }
+    
+    show_question_type(is_live)
+    {
+      if(is_live)
+      {
+        this.ans_type_display.src = this.live_type_img;
+      }
+      else
+      {
+        this.ans_type_display.src = this.full_type_img;
+      }
     }
     
     set_output_el(el)
@@ -60,6 +98,8 @@
         this.q_list = this.gen_ordered_list();
       }
       
+      //set that list not done
+      this.list_done = false;
       //init q trackers
       this.get_next_question();
     }
@@ -75,6 +115,7 @@
       else
       {
         this.round++;
+        this.list_done = true;
         //app controller will check if round inc then
         //will either end game or call question controller
         //to create the q_list again
@@ -94,9 +135,8 @@
       //display prompt
       this.prompt_el.innerHTML = this.curr_q.questions[0];
       
-      //DVDVDVDVDVDV
       //check question type(Live/full)
-      //change display to indicate Live/Full question
+      this.show_question_type(this.curr_q.f_live);
     }
     
     gen_ordered_list()
@@ -117,7 +157,7 @@
       let return_list = [];
       
       let tmp_arr = this.gen_ordered_list();
-      
+      console.log("TMP ARR LEN:" + tmp_arr.length);
       while(tmp_arr.length > 0)
       {
         //pull rand question number from q numbers left
@@ -129,9 +169,20 @@
         
       }
       
+      console.log("ret ARR LEN:" + return_list.length);
       return return_list;
       
     }//END FUNC GEN RANDOM Q LIST
+    
+    get_num_questions()
+    {
+      return this.q_list.length;
+    }
+    
+    is_list_done()
+    {
+      return this.list_done;
+    }
     
     update_input_display()
     {
@@ -164,6 +215,13 @@
       //is live question/full?
       if(this.curr_q.f_live)
       {//live
+        //if enter button, do nothing
+        if(answer_submitted)
+        {
+          return 0;
+        }
+      
+      
         //inc question's total strokes
         this.curr_q.total_strokes++;
       
@@ -191,10 +249,9 @@
             this.curr_input_display = this.curr_input;
           }
           
+          //update display
           this.update_input_display();
-          //DVDVDVDVDVDVDVD
-          //if(parent.settings.audio)
-          //{//play a sound}
+          this.show_correct();
             
           //check if question fully answered
           if(this.check_answer(this.curr_q, this.curr_input))
@@ -202,7 +259,6 @@
             //if full answer, next question
             this.get_next_question();
           }
-          //update display
           
           //return correct point
           return 1;
@@ -269,7 +325,6 @@
             points = 1;
           }
           //show correct animation/sound
-          //DVDVDVDVDVDVDVDV
           this.show_correct();
           
           //get next question
@@ -338,7 +393,10 @@
       {
         this.output_el.classList.toggle("good_answer_a");
       }
-    }
+      //DVDVDVDVDVDVDVD
+      //if(parent.settings.audio)
+      //{//play a sound}
+    }//END FUNC SHOW CORRECT
     
     get_answer_remainder(input, question)
     {

@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Week 3 Code Experiments 2 - Russian Keyboard</title>
+  <meta charset="utf-8">
+  <style>
+    input
+    {
+      width: 100%;
+    }
+    textarea
+    {
+      width: 100%;
+      height: 1000px;
+    }
+    .key_row
+    {
+      display: flex;
+    }
+    .key_grid
+    {
+      display: inline-grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      background-color: gray;
+      border: solid lightgray 2px;
+      border-radius: 5px;
+      width: 3em;
+      height: 3em;
+      text-align: center;
+    }
+    .special_key_grid
+    {
+      display: inline-grid;
+      grid-template-columns: 1fr;
+      align-items: center;
+      background-color: gray;
+      border: solid lightgray 2px;
+      border-radius: 5px;
+      text-align: center;
+    }
+    .key_label_eng_two_row
+    {
+      grid-row: 1 / span 2;
+      color: black;
+    }
+    .key_label_russ_two_row
+    {
+      grid-row: 1 / span 2;
+      color: darkred;
+      grid-column:2;
+    }
+    .key_label_eng
+    {
+      color: black;
+    }
+    .key_label_russ
+    {
+      color: darkred;
+    }
+    .key_down
+    {
+      background-color: darkgray;
+    }
+    
+    
+    
+    #output_el
+    {
+      height: 1em;
+      font-size: 1em;
+      font-family: inherit;
+      display: inline-block;
+      min-width: 200px;
+      border: solid black 1px;
+    }
+    #ans_type_display
+    {
+      width: 55px;
+      height: 20px;
+      display: inline-block;
+      vertical-align: top;
+    }
+    
+    #prompt_el
+    {
+      margin-left: 60px;
+    }
+    
+    
+    .show_answer
+    {
+      color: darkgray;
+    }
+    
+    .bad_answer
+    {
+      color: red;
+      display: inline-block;
+      animation: shake_once 0.3s ease-in;
+    }
+    
+    .good_answer_a
+    {
+      animation: flash_correct_a 0.2s ease-in;
+    }
+    
+    @keyframes flash_correct_a
+    {
+      0%{box-shadow: 0px 0px 0px 0px lightgreen;}
+      50%{box-shadow: 0px 0px 10px 10px lightgreen;}
+      100%{box-shadow: 0px 0px 0px 0px lightgreen;}
+    }
+    .good_answer_b
+    {
+      animation: flash_correct_b 0.2s ease-in;
+    }
+    
+    @keyframes flash_correct_b
+    {
+      0%{box-shadow: 0px 0px 0px 0px lightgreen;}
+      50%{box-shadow: 0px 0px 10px 10px lightgreen;}
+      100%{box-shadow: 0px 0px 0px 0px lightgreen;}
+    }
+    
+    @keyframes shake_once
+    {
+      0%{transform: translateY(20px);}
+      25%{transform: translateY(-17px);}
+      45%{transform: translateY(15px);}
+      65%{transform: translateY(-12px);}
+      80%{transform: translateY(9px);}
+      90%{transform: translateY(-7px);}
+      95%{transform: translateY(5px);}
+      100%{transform: translateY(0px);}
+    }
+    
+    .paused::after
+    {
+      content: "PAUSED";
+      position: fixed;
+      font-size: 5em;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform:translate(-50%, -50%);
+      text-shadow: 0px 0px 7px white;
+    }
+    
+    .unpaused::after
+    {
+      content: "PAUSED";
+      position: fixed;
+      font-size: 5em;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      text-shadow: 0px 0px 7px white;
+      animation: scale_fade 0.2s ease-in forwards;
+    }
+    
+    @keyframes scale_fade
+    {
+      0%{transform: translate(-50%, -50%) scale(1);
+         opacity: 1;}
+      100%{transform: translate(-50%, -50%) scale(5);
+           opacity: 0;}
+    }
+  </style>
+  <script src="eng_qwerty_key_map.js"></script>
+  <script src="russ_keyboard.js"></script>
+  <script src="questionBankController.js"></script>
+  <script src="questionController.js"></script>
+  <script src="inputController.js"></script>
+  <script src="profileManager.js"></script>
+  <script src="userStorage.js"></script>
+  <script src="appControler.js"></script>
+  <script id="game_mod" src="test_template_game.js"></script>
+</head>
+<body>
+
+  <a href="index.html">&lt;Back</a>
+  <h1> Russian Keyboard </h1>
+  <h2 id="t"> Press any key: </h2>
+  <div id="profile_el"></div>
+  <div id="score_el"></div>
+  <div id="game_area"></div>
+  <div id="prompt_el"></div>
+  <img id="ans_type_display" src="">
+  <pre id="output_el"></pre>
+  <div id="keyboard_dis">
+  </div>
+  
+  <script>
+  
+//Function escapes regex chars in given string and returns updated string
+function excape_regex_chars(str)
+{
+  //first the escape char
+  str = str.replace(/\\/g, "\\\\");
+  //()
+  str = str.replace(/\(/g, "\\(");
+  str = str.replace(/\)/g, "\\)");
+  
+  //+
+  str = str.replace(/\+/g, "\\+");
+  
+  //=
+  str = str.replace(/\=/g, "\\=");
+  
+  //-
+  str = str.replace(/\-/g, "\\-");
+  
+  //?
+  str = str.replace(/\?/g, "\\?");
+  
+  //*
+  str = str.replace(/\*/g, "\\*");
+  
+  //^
+  str = str.replace(/\^/g, "\\^");
+  
+  //^
+  str = str.replace(/\./g, "\\.");
+  
+  return str;
+}
+
+////////////////////////////PX HELPER/////////////////////////////////////
+function get_px_helper(imgdata)
+{
+  return {  width: imgdata.width,
+            height: imgdata.height,
+            data: imgdata.data,
+            data_ref: imgdata,
+            get_ref: function()
+                     {
+                       return this.data_ref;
+                     },
+            get_px: function (x, y)
+                    {
+                      index_st = y * this.width * 4;
+                      index_st += x * 4;
+                      tmp_px = [this.data[index_st],
+                                this.data[index_st + 1],
+                                this.data[index_st + 2],
+                                this.data[index_st + 3]];
+                      return tmp_px;
+                    },
+            set_px: function (x, y, px)
+                    {
+                      let index_st = y * this.width * 4;
+                      index_st += x * 4;
+                      this.data[index_st] = px[0];
+                      this.data[index_st + 1] = px[1];
+                      this.data[index_st + 2] = px[2];
+                      this.data[index_st + 3] = px[3];
+                    }
+          };
+}
+//////////////////////////////END PX HELPER//////////////////////////
+  
+  
+
+  
+  /*************************************************************************
+  **************************TEST LIST CREATER*******************************
+  **************************************************************************
+  //Test Program:
+  
+  let tmp_list = "";
+  
+  
+  //create new Russian keyboard 
+  //first create qwerty keyboard that russ will use for its construction etc.
+  const qwerty_map = EngQWERTYKeyMap.getKeyMap()
+  
+  //Create russ_keyboard obj
+  //needs el_id prefix and obj for its keyboard it is using
+  //(prob could be reworked to make more comparable w/other keyboard layouts other than qwerty...)
+  const russ_key_board = new RussKeyBoard("russ_", qwerty_map);
+  russ_key_board.create_russ_keyboard("keyboard_dis");//add Russ Keyboard
+  
+  //create a temp list
+  for(let i = 0; i < 10; i++)
+  {
+    let word_len = Math.floor(Math.random() * 5) + 1;
+    let tmp_eng_char = "";
+    let tmp_char = "";
+    for(let k = 0; k < word_len; k++)
+    {
+      let tmp_new_char = qwerty_map[(Math.floor(Math.random() * 67))]
+      let capitalize = Math.random() * 50;
+    
+      if(capitalize > 20)
+      {
+        tmp_eng_char += tmp_new_char.toUpperCase();
+        tmp_char += russ_key_board.russ_key_map[tmp_new_char].toUpperCase();
+      }
+      else
+      {
+        tmp_eng_char += tmp_new_char;
+        tmp_char += russ_key_board.russ_key_map[tmp_new_char];
+      }
+    }
+    
+    let tmp_ans_type = Math.floor(Math.random() * 10);
+    let tmp_flag = "F";
+    if(tmp_ans_type > 4)
+    {
+      tmp_flag = "L"
+    }
+    
+    tmp_list += tmp_flag + "RPN[RUSS]MC#0A#2I#5Q#10S#7, " + tmp_char + ", " + tmp_char + " \n";
+  }//END CREATE TEMP LIST
+  
+  console.log(tmp_list);
+  **********************************************************************
+  ******************************END TEST LIST CREATOR*******************
+  **********************************************************************/
+  //init user data
+  
+  
+  
+  //get game name
+  
+  
+  
+  //get given list from user profile
+  
+  //create new Russian keyboard 
+  //first create qwerty keyboard that russ will use for its construction etc.
+  const qwerty_map = EngQWERTYKeyMap.getKeyMap();
+  
+  //Create russ_keyboard obj
+  //needs el_id prefix and obj for its keyboard it is using
+  //(prob could be reworked to make more comparable w/other keyboard layouts other than qwerty...)
+  const russ_key_board = new RussKeyBoard("russ_", qwerty_map);
+  russ_key_board.create_russ_keyboard("keyboard_dis");//add Russ Keyboard
+ 
+  
+  
+  //create new Input controller. Main input board is eng qwerty
+  let tmp_input_devs_arr = [];
+  tmp_input_devs_arr["RUSS"] = russ_key_board;
+  
+  //init input dev;
+  const input_obj = new InputController(qwerty_map, tmp_input_devs_arr);
+  
+  
+  const g_ctl = new GameController();
+  g_ctl.set_score_display_el(document.getElementById("score_el"));
+ 
+  //create questions list and extract list
+  let q_bank = new QuestionBankController(tmp_list);
+  //q_bank.extract_from_text();
+  console.log(q_bank);
+  
+  //params for the q_controler obj
+  let init_p_obj = {bank: q_bank,
+                       prompt: document.getElementById("prompt_el"),
+                       output: document.getElementById("output_el"),
+                       type_display: document.getElementById("ans_type_display"),
+                       live_img_src: "imgs/common/live_ans_dis.png",
+                       full_img_src: "imgs/common/full_ans_dis.png"
+                      };
+  
+  const q_ctl = new QuestionController(
+                                       init_p_obj["prompt"],
+                                       init_p_obj["output"],
+                                       init_p_obj["type_display"],
+                                       init_p_obj["live_img_src"],
+                                       init_p_obj["full_img_src"],
+                                       init_p_obj["bank"]
+                                       );
+
+  
+  let app_config = {promt_el:     document.getElementById("prompt_el"),
+                    output_el:    document.getElementById("output_el"),
+                    score_el:     document.getElementById("score_el"),
+                    q_type_el:    document.getElementById("ans_type_display"),
+                    profile_el:   document.getElementById("profile_el"),
+                    live_img_src: "imgs/common/live_ans_dis.png",
+                    full_img_src: "imgs/common/full_ans_dis.png",
+                    eng_map:      EngQWERTYKeyMap.getKeyMap,
+                    dev_arr:      {"RUSS": new RussKeyBoard("russ_", this.eng_map) },
+                    rand_order:   true
+                    };
+  
+  //create new app controller and set its diff components
+  const app_c = new AppController(app_config);
+  /*app_c.set_input_controller(input_obj);
+  app_c.set_bank_controller(q_bank);
+  app_c.set_game_controller(g_ctl);
+  app_c.set_question_controller(q_ctl);*/
+  
+  //set body events
+  app_c.init();
+  ////DVDVDVDVDVDVDVDV
+  
+  
+  
+  
+  //NEW NOTES
+  
+  //add in user profile
+  //create level up func to run at end of game
+    //shows leveing up of player via points from game
+    //can skip to end
+    //it runs/levels up the player, updates and saves their profile
+    
+  //need to make better start/end screens etc
+  //need to make better the score display func etc
+  
+  //mod styles
+    //user techno colors
+    //move curr styles to new css file for onhand options
+    
+  //LATER::
+    //make better game
+    //convert js to actual modules
+    //create imgs
+    //create avatar chooser in the profile section
+    
+  
+  
+  
+  
+  
+  
+  //NOTES:
+  /////////////settings controller?///////////////////////
+  //holds settings audio settings
+  
+  /////////////audio controller///////////////////////
+  //holds mute/volume settings
+  //plays sounds
+  
+  
+  //TODO
+  //indication to user for question if is full/live question
+  //correct answer animation
+    //remove/set class that has an animate once on input field
+      //flashes borders or something quick that won't be affected by
+      //user answering next question right away or get in the way of 
+      //them doing so.
+  
+  //design basic game to test
+  //design save/load module
+  //design rest of stuff lol
+  //make JavaScript components modules
+  //probably should make constructors of controllers accept init vals
+    //instead of init-ing them with functions as much.
+  
+  
+  //pause/unpaused animations
+  
+  
+  //////////////////game engine//////////////////////////////
+  //will have question hold in case the game wants you to wait to ask questions
+    //ie during a "cut scene" or perhaps they are only asked/answered during certain
+    //phases of the game. Thus, the app module checks for holds/paused from game
+    //module before sending input to the questonsController module
+    
+    
+    //has player obj? controls the player based off "score", actions cost score pts
+    //game controller has setInterval to update game logic.
+      //When paused need to cancel Interval, reset when un-paused
+      //Controller will need diff countdown counters for when actions need to happen
+        //eg enemy moves forward every x seconds but interval ends every x/10 seconds etc
+        //when interval ends/activates runs a function that runs though "check list" to update game
+    //player looses ->GAME OVER ->coin slots to "pay agian?"/return to menu screen
+  </script>
+</body>
+</html>

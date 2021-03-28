@@ -1,0 +1,299 @@
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu+Mono:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Nunito&display=swap");
+:root
+{
+  --black-light: #102;
+  --neon-green: #4f4;
+  --neon-orange: #f90;
+  --neon-yellow: #df0;
+  --neon-blue: #08f;
+  --neon-red: #f20;
+  --neon-white: #ddf;
+}
+body
+{
+  background-color: var(--black-light);
+  color: var(--neon-blue);
+  font-family: Nunito;
+}
+
+input,
+textarea
+{
+  background-color: inherit;
+  border: solid 3px var(--neon-blue);
+  color: inherit;
+  outline: none
+}
+input[type=text],
+textarea
+{
+  color: var(--neon-white);
+}
+textarea
+{
+  width: 80vw;
+  max-width: 900px;
+  height: 40vh;
+}
+input:focus
+{
+  outline: solid 1px var(--neon-white);
+}
+input[class$="_btn"]
+{
+  cursor: pointer;
+}
+
+.normal_btn:hover
+{
+  background-color: var(--neon-blue);
+  color: var(--black-light);
+}
+
+input::placeholder
+{
+  color: var(--neon-blue);
+}
+
+header,
+main,
+footer
+{
+  margin: 0 auto;
+  max-width: 1000px;
+  text-align: center;
+}
+
+h1,h2,h3,h4,h5,h6
+{
+  font-family: "Ubuntu Mono", monospace;
+}
+
+header > h1
+{
+  font-family: "Press Start 2P", monospace;
+}
+
+
+
+.display_panel
+{
+  border: solid 2px var(--neon-blue);
+  display: inline-block;
+  margin: 15px;
+  padding: 30px;
+}
+
+.left_align
+{
+  text-align: left;
+}
+
+.center_align
+{
+  text-align: center;
+}
+
+.marg_small_top_bot
+{
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.marg_small_top
+{
+  margin-top: 0;
+}
+
+.marg_small_bot
+{
+  margin-bottom: 0;
+}
+
+.small_margins
+{
+  margin: 15px;
+}
+
+
+
+.hidden
+{
+  display: none;
+}
+
+.div_btn
+{
+  cursor: pointer;
+}
+
+.btn
+{
+  cursor: pointer;
+  border-radius: 15px;
+  outline: none;
+  min-width: 10em;
+}
+.btn:hover
+{
+  color: var(--black-light);
+  background-color: var(--neon-white);
+  border-color: var(--neon-white);
+}
+.btn:active
+{
+  background-color: var(--black-light);
+  color: var(--neon-white);
+  border-color: var(--neon-green);
+}
+
+/*user mini profile insert css */
+.mini_profile > hr
+{
+  border-color: var(--neon-white);
+  border-style: solid;
+}
+
+
+.user_header_left
+{
+  display: inline-block;
+}
+
+.user_header_right
+{
+  display: inline-block;
+}
+
+.outer_xp_bar
+{
+  min-width: 100px;
+  border: solid 2px var(--neon-white);
+  min-height: 10px;
+}
+
+.inner_xp_bar
+{
+  min-height: 10px;
+}
+
+/* user profile list select */
+.list_header
+{
+
+}
+
+.list_header > h3
+{
+  display: inline-block;
+  width: 33%;
+}
+
+.list_panel
+{
+  border: solid 2px var(--neon-white);
+  min-height: 100px;
+  max-height: 50vh;
+  list-style: none;
+  padding-left: 0px;
+}
+
+.list_panel .game_name,
+.list_panel .score_tag
+{
+  max-width: 32%;
+  min-width: 32%;
+  display: inline-block;
+}
+.list_panel h3,
+.list_panel h4
+{
+  margin: 0;
+}
+.list_panel li:nth-child(even)
+{
+  background-color: var(--neon-blue);
+  color: var(--black-light);
+}
+.list_panel li:hover
+{
+  background-color: var(--neon-white);
+  color: var(--black-light);
+}
+.list_panel li,
+li label
+{
+  cursor: pointer;
+}
+
+input:checked + label:before
+{
+  content: "\2611 ";
+}
+input:checked + label
+{
+  color: var(--neon-green);
+}
+
+input[type=button]:disabled
+{
+  border-color: var(--neon-red);
+  color: var(--neon-red);
+}
+input[type=button]:hover:disabled
+{
+  border-color: var(--neon-red);
+  color: var(--neon-red);
+  background-color: var(--black-light);
+  cursor: not-allowed;
+}
+
+input:not(checked) + label:before
+{
+  content: "\2610 ";
+}
+
+.score_tag
+{
+
+}
+
+.list_btns_panel input
+{
+  margin: 0 40px;
+}
+
+/*grid support*/
+@supports (display: grid)
+{
+  /*mini profile insert*/
+  .mini_profile
+  {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    text-align: left;
+  }
+  .mini_profile > hr
+  {
+    grid-column: 1 / span 2;
+    width: 100%;
+  }
+  .user_header_left
+  {
+    
+  }
+
+  .user_header_right
+  {
+    max-width: 500px;
+  }
+  
+  /*user profile list select*/
+    
+  .list_btns_panel
+  {
+    
+  }
+}
