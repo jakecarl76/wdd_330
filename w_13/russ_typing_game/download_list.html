@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>List Download</title>
+  <meta charset="utf-8">
+<link rel="stylesheet" href="main.css">
+
+<script src="userStorage.js"></script>
+<script src="profileManager.js"></script>
+<script src="utilities.js"></script>
+</head>
+<body>
+<header>
+  <h1> [NAME_HERE] ARCADE</h1>
+  <img id="main_banner_img" src="">
+</header>
+<main>
+<h1> Download a New List </h1>
+<p class="restrained margin_centered">
+  Load available lists from different repositories by pressing the buttons below.
+  Load a list from a custom online repository by entering the url into the text box
+  and pressing the "load custom repository" button.
+</p>
+
+<div id="user_profile">
+</div>
+
+<div id="repository_select">
+  <h2> Repositories </h2>
+  <div>
+    <input type="button" class="btn small_margins" value="math repository"
+     onclick="get_text_resource('math_file_list.txt', create_insert);">
+     
+    <input type="button" class="btn small_margins" value="russian language repository"
+     onclick="get_text_resource('russ_file_list.txt', create_insert);">
+  </div>
+  <div>
+    <input type="button" id="get_list_btn" class="btn" value="load custom repository"
+     onclick="let tmp_repo = document.getElementById('custom_repo').value;
+              if(tmp_repo != '')
+              {
+                get_text_resource(tmp_repo, create_insert);
+              };">
+    <input type="text" id="custom_repo" placeholder="repository url"
+     onkeydown="key_click(event, 'get_list_btn');">
+    <br>
+    <span>(try "typing_practice_list.txt")</span>
+    <br>
+    <span class="secret_txt">*(Or try "cheaters_list.txt")</span>
+  </div>
+</div>
+<hr>
+<div id="list_download_panel">
+</div>
+
+<input type="button" class="btn small_margins" value="back"
+     onclick="window.location.href='user_page.html';">
+</main>
+<footer>
+
+</footer>
+<script>
+  const user_storage = new UserStorage();
+  user_storage.test_list();
+  console.log(user_storage);
+  const profile_manager = new ProfileManager(user_storage);
+  profile_manager.create_profile_insert("user_profile");
+  
+  function create_insert(data)
+  {
+    document.getElementById("list_download_panel").innerHTML = "";
+    profile_manager.create_list_download_insert("list_download_panel", data);
+  }
+  
+  
+  
+  //DVDVDVDV
+  //repositories: math, russ, custom entered:(test)
+  
+  //add list panel for default list repo
+  get_text_resource("math_file_list.txt", create_insert);
+  
+  //create a func that is called by the get resoucre func and 
+  //passed the file list
+  //func creates all pannels etc for downloading the list etc
+  //fucn should probably reside in the profileManager class with other 
+  //like funcs.
+  //func will need to build a selection list from the 
+  //file list that shows the 
+    //list name/desc/a button to get the list
+    //when button pressed, ->list name & file name passed to a func 
+    //that gets
+    //the file then passes returned file txt and the given list 
+    //name to a func
+    //that adds then to user's profile and saves their profile.
+  //besides list panel also requires a back button
+  
+  //get file list test:
+  
+  //ajax get list of available lists
+  
+  //add stuff to ajax get selected lists and add to user's lists in their profile
+  
+</script>
+</body>
+</html>

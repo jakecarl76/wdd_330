@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>[NAME HERE] Arcade</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="main.css">
+  <link id="game_style_css" rel="stylesheet" href="game_style_a.css">
+  <script src="eng_qwerty_key_map.js"></script>
+  <script src="russ_keyboard.js"></script>
+  <script src="questionBankController.js"></script>
+  <script src="questionController.js"></script>
+  <script src="inputController.js"></script>
+  <script src="profileManager.js"></script>
+  <script src="userStorage.js"></script>
+  <script src="appControler.js"></script>
+  <script src="utilities.js"></script>
+</head>
+<body>
+<header>
+  <h1> [NAME_HERE] ARCADE</h1>
+  <img id="main_banner_img" src="">
+</header>
+<main class="left_align">
+  <div id="default_controls">
+    <input type="button" class="btn small_margins" value="back" 
+     onclick="if(confirm('Are you sure you want to quit? Any unsaved progress will be lost.'))
+              {
+                app_c.end_game();
+              };">
+    <input type="button" class="btn small_margins" value="pause" 
+     onclick="app_c.pause_game();">
+  </div>
+  <div id="profile_el"></div>
+  <div id="score_el"></div>
+  <div id="game_title_board"></div>
+  <div id="game_area"></div>
+  <div id="prompt_el"></div>
+  <img id="ans_type_display" src="">
+  <pre id="output_el"></pre>
+  <div id="keyboard_dis">
+  </div>
+</main>
+<footer id="footer_el">
+</footer>  
+  <script >
+  /****************************ex load a module dynamically*************
+  let the_mod = "./test_mod.js";
+  alert(the_mod);
+  let tmp_class = null;
+  import(the_mod).then( (mod)=>{
+  tmp_class = new mod.PooClass("this is poo");
+  tmp_class.call_val();
+  
+  });
+  **********************************************************************/
+//Function escapes regex chars in given string and returns updated string
+ 
+  //game configs
+  let st_scn = "<div class='generic_gm_scn'> <h1> Test Template Game </h1>"
+              + "<input type='button' value='start' "
+              + "onclick='app_c.start_game();'></div>";
+
+  let win_scn = "<div class='generic_gm_scn'> <h1> You Won! </h1>"
+              + "<input type='button' value='done' "
+              + "onclick='app_c.end_game();'></div>";
+
+  let gm_ovr_scn = "<div class='generic_gm_scn'> <h1> game over </h1>"
+                 + "<input type='button' value='end' "
+                 + "onclick='app_c.end_game();'></div>";
+                 
+  //game config obj passed to app controller
+ /* let app_config = {profile_id:   "profile_el",
+                    prompt_el:    document.getElementById("prompt_el"),
+                    output_el:    document.getElementById("output_el"),
+                    score_el:     document.getElementById("score_el"),
+                    game_el:      document.getElementById("game_area"),
+                    q_type_el:    document.getElementById("ans_type_display"),
+                    footer_id:    "footer_el",
+                    live_img_src: "imgs/common/live_ans_dis_a.png",
+                    full_img_src: "imgs/common/full_ans_dis_a.png",
+                    start_screen: st_scn,
+                    win_screen: win_scn,
+                    game_over_screen: gm_ovr_scn,
+                    can_w: 1000,
+                    can_h: 410,
+                    eng_map:      EngQWERTYKeyMap.getKeyMap,
+                    dev_arr:      {"RUSS": new RussKeyBoard("russ_", this.eng_map) },
+                    key_devs:     ["RUSS"],//ie keyboards for which to insert a display keyboard
+                    key_devs_dis_ids: ["keyboard_dis"],
+                    xp_value: 10,
+                    rand_order:   true
+                    };
+                    
+                    */
+  //game config obj passed to app controller
+  let app_config = {profile_id:   "profile_el",
+                    prompt_el:    document.getElementById("prompt_el"),
+                    output_el:    document.getElementById("output_el"),
+                    score_el:     document.getElementById("score_el"),
+                    game_el:      document.getElementById("game_area"),
+                    q_type_el:    document.getElementById("ans_type_display"),
+                    footer_id:    "footer_el",
+                    live_img_src: "imgs/common/live_ans_dis_a.png",
+                    full_img_src: "imgs/common/full_ans_dis_a.png",
+                    start_screen: st_scn,
+                    win_screen: win_scn,
+                    game_over_screen: gm_ovr_scn,
+                    can_w: 900,
+                    can_h: 500,
+                    eng_map:      EngQWERTYKeyMap.getKeyMap,
+                    dev_arr:      {"RUSS": new RussKeyBoard("russ_", this.eng_map) },
+                    key_devs:     ["RUSS"],//ie keyboards for which to insert a display keyboard
+                    key_devs_dis_ids: ["keyboard_dis"],
+                    xp_value: 10,
+                    rand_order:   true
+                    };
+  
+  //need save high/last score etc
+  
+  //create new app controller and set its diff components
+  const app_c = new AppController(app_config);
+  //app controller self init's when the game module is loaded and its
+  //promise function executes
+  
+  
+  
+  ////DVDVDVDVDVDVDVDV
+  
+  
+  
+  
+  //NEW NOTES
+  
+  //add in user profile
+  //create level up func to run at end of game
+    //shows leveing up of player via points from game
+    //can skip to end
+    //it runs/levels up the player, updates and saves their profile
+    
+  //need to make better start/end screens etc
+  //need to make better the score display func etc
+  
+  //mod styles
+    //user techno colors
+    //move curr styles to new css file for onhand options
+    
+  //LATER::
+    //make better game
+    //convert js to actual modules
+    //create imgs
+    //create avatar chooser in the profile section
+    //settings module for audio settings etc
+  
+  
+  
+  
+  
+  
+  //NOTES:
+  /////////////settings controller?///////////////////////
+  //holds settings audio settings
+  
+  /////////////audio controller///////////////////////
+  //holds mute/volume settings
+  //plays sounds
+  
+  
+  //TODO
+  //indication to user for question if is full/live question
+  //correct answer animation
+    //remove/set class that has an animate once on input field
+      //flashes borders or something quick that won't be affected by
+      //user answering next question right away or get in the way of 
+      //them doing so.
+  
+  //design basic game to test
+  //design save/load module
+  //design rest of stuff lol
+  //make JavaScript components modules
+  //probably should make constructors of controllers accept init vals
+    //instead of init-ing them with functions as much.
+  
+  
+  //pause/unpaused animations
+  
+  
+  //////////////////game engine//////////////////////////////
+  //will have question hold in case the game wants you to wait to ask questions
+    //ie during a "cut scene" or perhaps they are only asked/answered during certain
+    //phases of the game. Thus, the app module checks for holds/paused from game
+    //module before sending input to the questonsController module
+    
+    
+    //has player obj? controls the player based off "score", actions cost score pts
+    //game controller has setInterval to update game logic.
+      //When paused need to cancel Interval, reset when un-paused
+      //Controller will need diff countdown counters for when actions need to happen
+        //eg enemy moves forward every x seconds but interval ends every x/10 seconds etc
+        //when interval ends/activates runs a function that runs though "check list" to update game
+    //player looses ->GAME OVER ->coin slots to "pay agian?"/return to menu screen
+  </script>
+</body>
+</html>

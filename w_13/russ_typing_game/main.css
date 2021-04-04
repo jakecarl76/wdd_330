@@ -1,0 +1,452 @@
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu+Mono:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Nunito&display=swap");
+:root
+{
+  --black-light: #102;
+  --neon-green: #4f4;
+  --neon-orange: #f90;
+  --neon-yellow: #df0;
+  --neon-blue: #08f;
+  --neon-red: #f20;
+  --neon-white: #ddf;
+}
+body
+{
+  background-color: var(--black-light);
+  background-image: url("imgs/common/arcade_carpet_red_triangles.png"),
+                    url("imgs/common/arcade_carpet_circles.png"),
+                    url("imgs/common/arcade_carpet_white_lint.png"),
+                    url("imgs/common/arcade_carpet_bolts.png"),
+                    url("imgs/common/arcade_carpet_blue_lint.png");
+  color: var(--neon-blue);
+  font-family: Nunito;
+  animation: slow_rise 10s linear infinite;
+}
+
+input,
+textarea
+{
+  background-color: inherit;
+  border: solid 3px var(--neon-blue);
+  color: inherit;
+  outline: none
+}
+input[type=text],
+textarea
+{
+  color: var(--neon-white);
+}
+textarea
+{
+  width: 80vw;
+  max-width: 100%;
+  height: 40vh;
+}
+input:focus
+{
+  outline: solid 1px var(--neon-white);
+}
+input[class$="_btn"]
+{
+  cursor: pointer;
+}
+
+.normal_btn:hover
+{
+  background-color: var(--neon-blue);
+  color: var(--black-light);
+}
+
+input::placeholder
+{
+  color: var(--neon-blue);
+}
+
+header,
+main,
+footer
+{
+  background-color: var(--black-light);
+  margin: 0 auto;
+  max-width: 1000px;
+  text-align: center;
+  box-sizing: border-box;
+  padding: 2em;
+}
+header
+{
+  
+}
+main
+{
+  min-height: 50vh;
+}
+
+footer
+{
+  border-top: solid 2px var(--neon-white);
+}
+
+h1,h2,h3,h4,h5,h6
+{
+  font-family: "Ubuntu Mono", monospace;
+}
+
+header > h1
+{
+  font-family: "Press Start 2P", monospace;
+}
+
+#default_controls
+{
+  display: flex;
+  justify-content: space-between;
+}
+#default_controls input[type=button]
+{
+  max-width: 15em;
+}
+
+.display_panel
+{
+  border: solid 2px var(--neon-blue);
+  max-width: 100%;
+  display: inline-block;
+  padding: 30px;
+  box-sizing: border-box;
+}
+
+.avatar_selector
+{
+  position: fixed;
+  max-width: 1000px;
+  left: 50%;
+  top:50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--black-light);
+  border: solid var(--neon-orange) 2px;
+  padding: 2em;
+  text-align:center;
+}
+
+
+/*generic game screen */
+.generic_gm_scn
+{
+  width: 900px;
+  height: 500px;
+  text-align: center;
+}
+
+
+.generic_gm_scn input[type=button]
+{
+  max-width: 10em;
+  font-size: 1.5em;
+  padding: 15px;
+}
+
+.emf_span
+{
+  font-family: "Ubuntu Mono", monospace;
+  font-weight: bold;
+}
+
+.secret_txt
+{
+  color: var(--black-light)
+}
+
+.restrained
+{
+  max-width: 500px;
+}
+
+.margin_centered
+{
+  margin: 0 auto;
+}
+
+
+/*flex support*/
+@supports (display: flex)
+{
+  .list_alternating li
+  {
+    display: flex;
+    justify-content: space-between;
+    padding-right: 1em;
+  }
+  
+  .list_alternating li input[type=button]
+  {
+    max-height: 2em;
+    align-self: center;
+  }
+  
+.avatar_selector
+{
+  display: flex;
+}
+}/*END @SUPPORTS FLEX*/
+
+/*grid support*/
+@supports (display: grid)
+{
+  /*mini profile insert*/
+  .mini_profile
+  {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    text-align: left;
+  }
+  .mini_profile > hr
+  {
+    grid-column: 1 / span 2;
+    width: 100%;
+  }
+  .user_header_left
+  {
+    
+  }
+
+  .user_header_right
+  {
+    max-width: 500px;
+  }
+  
+  /*user profile list select*/
+    
+  .list_btns_panel
+  {
+    
+  }
+}
+
+
+/*additive classes*/
+
+.left_align
+{
+  text-align: left;
+}
+
+.center_align
+{
+  text-align: center;
+}
+
+.marg_small_top_bot
+{
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.marg_small_top
+{
+  margin-top: 0;
+}
+
+.marg_small_bot
+{
+  margin-bottom: 0;
+}
+
+.small_margins
+{
+  margin: 15px;
+}
+
+
+
+.hidden
+{
+  display: none;
+}
+
+.div_btn,
+.cursor_ptr
+{
+  cursor: pointer;
+}
+
+.generic_gm_scn input[type=button],
+.btn
+{
+  cursor: pointer;
+  border-radius: 15px;
+  background-color: var(--black-light);
+  color: var(--neon-blue);
+  outline: none;
+  min-width: 10em;
+}
+
+.generic_gm_scn input[type=button]:hover,
+.btn:hover
+{
+  color: var(--black-light);
+  background-color: var(--neon-white);
+  border-color: var(--neon-white);
+}
+
+.generic_gm_scn input[type=button]:active,
+.btn:active
+{
+  background-color: var(--black-light);
+  color: var(--neon-white);
+  border-color: var(--neon-green);
+}
+
+/*user mini profile insert css */
+hr
+{
+  border-color: var(--neon-white);
+  border-style: solid;
+}
+
+
+.user_header_left
+{
+  display: inline-block;
+}
+
+.user_header_right
+{
+  display: inline-block;
+}
+.user_header_left img
+{
+  max-width: 200px;
+  width: 200px;
+  height: auto;
+}
+.outer_xp_bar
+{
+  min-width: 100px;
+  border: solid 2px var(--neon-white);
+  min-height: 10px;
+}
+
+.inner_xp_bar
+{
+  min-height: 10px;
+}
+
+/* user profile list select */
+.list_header
+{
+
+}
+
+.list_header > h3
+{
+  display: inline-block;
+  width: 33%;
+}
+
+.list_alternating,
+.list_panel
+{
+  border: solid 2px var(--neon-white);
+  min-height: 100px;
+  max-height: 50vh;
+  list-style: none;
+  padding-left: 0px;
+}
+.list_panel .game_name,
+.list_panel .score_tag
+{
+  max-width: 32%;
+  min-width: 32%;
+  display: inline-block;
+}
+.list_panel h3,
+.list_panel h4
+{
+  margin: 0;
+}
+.list_alternating li:nth-child(even),
+.list_panel li:nth-child(even)
+{
+  background-color: var(--neon-blue);
+  color: var(--black-light);
+}
+.list_alternating li.has_list
+{
+  background-color: var(--neon-orange);
+  color: var(--black-light);
+}
+.list_alternating li.has_list:nth-child(even)
+{
+  background-color: var(--neon-yellow);
+  color: var(--black-light);
+}
+
+.list_panel li:hover
+{
+  background-color: var(--neon-white);
+  color: var(--black-light);
+}
+.list_panel li,
+li label
+{
+  cursor: pointer;
+}
+
+input[type=radio]:checked + label:before
+{
+  content: "\2611 ";
+}
+input:checked + label
+{
+  color: var(--neon-green);
+}
+
+input[type=button]:disabled
+{
+  border-color: var(--neon-red);
+  color: var(--neon-red);
+}
+input[type=button]:hover:disabled
+{
+  border-color: var(--neon-red);
+  color: var(--neon-red);
+  background-color: var(--black-light);
+  cursor: not-allowed;
+}
+
+input[type=radio]:not(checked) + label:before
+{
+  content: "\2610 ";
+}
+
+.score_tag
+{
+
+}
+
+.list_btns_panel input
+{
+  margin: 0 40px;
+}
+
+@keyframes slow_rise
+{
+  0%{background-position: 0px 0px,
+                          0px 0px,
+                          0px 0px,
+                          0px 0px,
+                          0px 0px;}
+  0%{background-position:  0px 1045px,
+                           -209px 209px,
+                           0px 418px,
+                           209px 627px,
+                           0px 836px;}
+}
+
+.stop_animation
+{
+  animation-play-state: paused;
+}
+

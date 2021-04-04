@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Welcome to the [NAME_HERE] Arcade!</title>
+  <meta charset="utf-8">
+<link rel="stylesheet" href="main.css">
+<script src="profileManager.js"></script>
+<script src="userStorage.js"></script>
+<script src="utilities.js"></script>
+</head>
+<body>
+<header>
+  <h1> Welcome to [NAME_HERE] ARCADE</h1>
+  <img id="main_banner_img" src="">
+</header>
+<main>
+<p>
+  Please login or create an account:
+</p>
+
+<div id="login_div">
+  <input type="text" id="user_name" placeholder="User Name"
+   onkeydown="key_click(event, 'login_btn');">
+  <input type="button" id="login_btn" class="btn" value="login">
+</div>
+</main>
+<footer id="footer_el">
+</footer>
+<script>
+  const user_storage = new UserStorage();
+  user_storage.test_list();
+  document.getElementById("login_btn").addEventListener("click", 
+                                                        function()
+                                                        {
+                                                          let tmp_user = document.getElementById("user_name").value;
+                                                          
+                                                          if(user_storage.login_user(tmp_user))
+                                                          {
+                                                            //make sure no error before going to user page
+                                                            if(user_storage.get_user() != null)
+                                                            {
+                                                              //go to user page
+                                                              window.location.href = "user_page.html";
+                                                            }
+                                                          }
+                                                        }
+                                                        );
+  let profile_manager = new ProfileManager(null);
+  profile_manager.create_footer("footer_el");
+</script>
+</body>
+</html>

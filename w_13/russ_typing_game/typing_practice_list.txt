@@ -1,0 +1,3 @@
+Typing Practice List A (Left),  lists/hand_a_1.txt, Several exercises for practising touch typing with your left hand.,
+Typing Practice List B (Right),     lists/hand_b_1.txt, Several exercises for practising touch typing with your right hand.,
+Typing Practice List C (Both),     lists/hand_c_1.txt, Several exercises for practising touch typing with both hands.,

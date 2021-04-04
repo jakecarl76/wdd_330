@@ -50,6 +50,10 @@ var links_list = [
                    {
                      label: "Week12",
                      url: "w_12/index.html"
+                   },
+                   {
+                     label: "Week13",
+                     url: "w_13/index.html"
                    }
                  ];
                  
