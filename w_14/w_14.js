@@ -33,7 +33,7 @@ var w_list = [
   {
     type: "link",
     label: "Video Link",
-    url: "#"
+    url: "https://youtu.be/3kwpp7_R2MY"
   },
   
 
