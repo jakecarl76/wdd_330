@@ -237,11 +237,36 @@ class ProfileManager
     tmp_btn_1.addEventListener("click",
                                function()
                                {
-                                 document.body.classList.toggle('stop_animation')
+                                 document.body.classList.toggle('stop_animation');
                                  let tmp_obj = self.user_storage_obj.get_user_obj();
                                  tmp_obj.background_animation = !tmp_obj.background_animation;
                                  self.user_storage_obj.save_curr_user();
-                                 console.log(self.user_storage_obj.get_user_obj());
+                                 //console.log(self.user_storage_obj.get_user_obj());
+                               });
+                               
+    //mute sounds button
+    tmp_btn_1 = document.createElement("input");
+    tmp_options_div.appendChild(tmp_btn_1);
+    tmp_btn_1.type = "button";
+    tmp_btn_1.classList.add("btn");
+    tmp_btn_1.value = "Toggle Background Animation";
+    
+    //attach function
+    let self = this;
+    tmp_btn_1.addEventListener("click",
+                               function()
+                               {
+                                 let tmp_obj = self.user_storage_obj.get_user_obj();
+                                 tmp_obj.sound_muted = !tmp_obj.sound_muted;
+                                 self.user_storage_obj.save_curr_user();
+                                 if(tmp_obj.sound_muted)
+                                 {
+                                   alert("All sounds have been muted.");
+                                 }
+                                 else
+                                 {
+                                   alert("Sounds have been turned on.");
+                                 }
                                });
     
     let tmp_div = document.createElement("div");
