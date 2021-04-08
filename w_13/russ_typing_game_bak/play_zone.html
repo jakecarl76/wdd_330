@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>[NAME HERE] Arcade</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="main.css">
+  <link id="game_style_css" rel="stylesheet" href="game_style_a.css">
+  <script src="eng_qwerty_key_map.js"></script>
+  <script src="russ_keyboard.js"></script>
+  <script src="questionBankController.js"></script>
+  <script src="questionController.js"></script>
+  <script src="inputController.js"></script>
+  <script src="profileManager.js"></script>
+  <script src="userStorage.js"></script>
+  <script src="appControler.js"></script>
+  <script src="utilities.js"></script>
+</head>
+<body>
+<header>
+  <h1> [NAME_HERE] ARCADE</h1>
+  <img id="main_banner_img" src="">
+</header>
+<main class="left_align">
+  <div id="profile_el"></div>
+  <div id="default_controls">
+    <input type="button" class="btn small_margins" value="back" 
+     onclick="if(confirm('Are you sure you want to quit? Any unsaved progress will be lost.'))
+              {
+                get_app_c().end_game();
+              };">
+    <input type="button" class="btn small_margins" value="pause" 
+     onclick="get_app_c().pause_game();">
+  </div>
+  <div id="score_el"></div>
+  <div id="game_title_board"></div>
+  <div id="game_area"></div>
+  <div id="prompt_el"></div>
+  <img id="ans_type_display" src="">
+  <pre id="output_el"></pre>
+  <div id="keyboard_dis">
+  </div>
+</main>
+<footer id="footer_el">
+</footer>  
+  <script type="module" >
+  /****************************ex load a module dynamically*************
+  let the_mod = "./test_mod.js";
+  alert(the_mod);
+  let tmp_class = null;
+  import(the_mod).then( (mod)=>{
+  tmp_class = new mod.PooClass("this is poo");
+  tmp_class.call_val();
+  
+  });
+  **********************************************************************/
+//Function escapes regex chars in given string and returns updated string
+ import {get_curr_game_configs} from "/modules/game_configs.js";
+                    
+  
+  //need save high/last score etc
+  
+  //create new app controller and set its diff components
+  const app_c = new AppController(get_curr_game_configs());
+  //app controller self init's when the game module is loaded and its
+  //promise function executes
+  
+  function get_app_c()
+  {
+    return app_c;
+  }
+  
+  window.get_app_c = get_app_c;
+  </script>
+</body>
+</html>

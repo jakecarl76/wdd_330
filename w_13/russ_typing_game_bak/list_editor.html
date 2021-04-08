@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>List Editor</title>
+  <meta charset="utf-8">
+<link rel="stylesheet" href="main.css">
+<script src="userStorage.js"></script>
+<script src="profileManager.js"></script>
+<script src="utilities.js"></script>
+<script src="eng_qwerty_key_map.js"></script>
+<script src="russ_keyboard.js"></script>
+</head>
+<body>
+<header>
+  <h1> [NAME_HERE] ARCADE</h1>
+  <img id="main_banner_img" src="">
+</header>
+<main>
+<h1> List Editor </h1>
+<p>
+  Create your own practice lists!
+</p>
+
+<div id="user_profile">
+</div>
+
+<div id="editor_div">
+</div>
+
+<div id="">
+</div>
+
+</main>
+<footer id="footer_el">
+
+</footer>
+<script>
+  const user_storage = new UserStorage();
+  //user_storage.test_list();
+  console.log(user_storage);
+  const profile_manager = new ProfileManager(user_storage);
+  profile_manager.create_profile_insert("user_profile");
+  profile_manager.create_list_edit_insert("editor_div");
+  
+  
+  profile_manager.create_footer("footer_el");
+  
+</script>
+</body>
+</html>

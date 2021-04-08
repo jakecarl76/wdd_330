@@ -1,13 +1,99 @@
+:root
+{
+  --main-bg: #aaddaa;
+  --sub-bg:  #7a7;
+  --minor-bg: #eeeeee;
+  --main-text: #66f;
+}
+
+body
+{
+  background-color: var(--main-bg);
+  
+}
 
 #proj_url
 {
   width: 20em;
 }
+
 .p-note
 {
   max-width: 400px;
 }
+
 a img
 {
   max-width: 100px;
+}
+
+h1:first-of-type
+{
+  max-width: 500px;
+  margin: 0 auto;
+  margin-top: 25px;
+  color: var(--minor-bg);
+}
+
+#index_list
+{
+  margin: 0 auto;
+  max-width: 500px;
+  border-radius: 15px;
+  padding: 3em;
+  background-color: var(--minor-bg);
+  color: var(--main-text);
+}
+
+hr
+{
+  border: solid 2px var(--sub-bg);
+  max-width: 500px;
+  margin: 2em auto;
+  margin
+}
+
+footer
+{
+  max-width: 500px;
+  margin: 0 auto;
+  margin-bottom: 5em;
+}
+
+
+a[href="../index.html"]
+{
+  display: block;
+  max-width: 10em;
+  margin: 0 auto;
+  margin-top: 2em;
+  color:red;
+  text-align: center;
+  font-size: 1.5em;
+  font-family: san-serif;
+  background-color: var(--minor-bg);
+  padding: 1em;
+  border-radius: 15px;
+  color: var(--sub-bg);
+  text-decoration: none;
+}
+a[href="../index.html"]:hover
+{
+  background-color: var(--main-text);
+  color: var(--minor-bg);
+}
+a[href="../index.html"]:active
+{
+  background-color: darkred;
+  color: var(--minor-bg);
+}
+
+ul a
+{
+  color: var(--sub-bg);
+}
+ul a:hover
+{
+  color: darkred;
+  text-decoration: none;
 }

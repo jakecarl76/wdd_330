@@ -1,0 +1,17 @@
+LRPN[ENG]MC#0A#2I#5Q#4S#3,адский, hellish; infernal; diabolical; devilish; damned;
+LRPN[ENG]MC#0A#2I#5Q#4S#3,бегите, run;, бежать
+LRPN[ENG]MC#0A#2I#5Q#4S#3,бедствия, adversity; disasters; (afflicitons);
+LRPN[ENG]MC#0A#2I#5Q#4S#3,бежать, to run; escape; flee; abscond; break out; scurry;
+LRPN[ENG]MC#0A#2I#5Q#4S#3,без, without; less; out of; minus; save (for); wanting; absent;
+LRPN[ENG]MC#0A#2I#5Q#4S#3,бездетный, childless; 
+LRPN[ENG]MC#0A#2I#5Q#4S#3,бездна, abyss; deep; chasm;
+LRPN[ENG]MC#0A#2I#5Q#4S#3,безграничный, boundless; limitless; unlimited; infinite; bottomless; measureless;
+LRPN[ENG]MC#0A#2I#5Q#4S#3,беззаконие, lawlessness; iniquity; 
+LRPN[ENG]MC#0A#2I#5Q#4S#3,безопасно, safely; securely; 
+LRPN[ENG]MC#0A#2I#5Q#4S#3,безопасности, securtiy;, безопасность
+LRPN[ENG]MC#0A#2I#5Q#4S#3,безопасность, safety; security; safely; safeness;
+LRPN[ENG]MC#0A#2I#5Q#4S#3,безумный, insane; mad; crazy;
+LRPN[ENG]MC#0A#2I#5Q#4S#3,берег, shore; coast; bank;
+LRPN[ENG]MC#0A#2I#5Q#4S#3,беременность, pregnancy; gestation; childbearing;
+LRPN[ENG]MC#0A#2I#5Q#4S#3,бесплодный, fruitless; barren; sterile; arid; 
+LRPN[ENG]MC#0A#2I#5Q#4S#3,бичевать, scourge; lash; flail; scour;

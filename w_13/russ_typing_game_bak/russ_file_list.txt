@@ -1,0 +1,4 @@
+Russian Vocabulary List A,  lists/russ_a_1.txt, A list of 17 Russian vocabulary words,
+Russian Vocabulary B,       lists/russ_b_1.txt, A list of 76 Russian vocabulary words,
+Russian Vocabulary A -lvl2, lists/russ_a_2.txt, A list of 17 Russian vocabulary words (harder version),
+Russian Vocabulary B -lvl2, lists/russ_b_2.txt, A list of 76 Russian vocabulary words (harder version),
