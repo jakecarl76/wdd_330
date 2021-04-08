@@ -252,7 +252,6 @@ class ProfileManager
     tmp_btn_1.value = "Toggle Background Animation";
     
     //attach function
-    let self = this;
     tmp_btn_1.addEventListener("click",
                                function()
                                {
