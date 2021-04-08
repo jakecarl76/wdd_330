@@ -1786,8 +1786,8 @@
     }
     
     play_sound(aud_obj, restart = false)
-    {
-      if(!this.user_ref.get_user_storage_obj().sound_muted)
+    { 
+      if(!this.user_ref.get_user_storage_obj().get_user_obj().sound_muted)
       {
         if(restart)
         {
