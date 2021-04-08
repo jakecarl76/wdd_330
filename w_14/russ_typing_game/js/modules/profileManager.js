@@ -244,12 +244,16 @@ class ProfileManager
                                  //console.log(self.user_storage_obj.get_user_obj());
                                });
                                
+    let tmp_div = document.createElement("div");
+    tmp_options_div.appendChild(tmp_div);
+    tmp_div.classList.add("small_margins");
+    
     //mute sounds button
     tmp_btn_1 = document.createElement("input");
     tmp_options_div.appendChild(tmp_btn_1);
     tmp_btn_1.type = "button";
     tmp_btn_1.classList.add("btn");
-    tmp_btn_1.value = "Toggle Background Animation";
+    tmp_btn_1.value = "Toggle Muted Sounds";
     
     //attach function
     tmp_btn_1.addEventListener("click",
