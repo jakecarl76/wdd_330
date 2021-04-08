@@ -272,7 +272,7 @@ class ProfileManager
                                  }
                                });
     
-    let tmp_div = document.createElement("div");
+    tmp_div = document.createElement("div");
     tmp_options_div.appendChild(tmp_div);
     tmp_div.classList.add("small_margins");
     
